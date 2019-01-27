@@ -35,7 +35,15 @@ namespace RemoteAccessUtility
         }
         private string _connectionAddress;
 
-        public enum OperatingSystemType { UnKnown, Windows, Linux }
+        public enum OperatingSystemType
+        {
+            [Description("Unknown")]
+            UnKnown,
+            [Description("Windows")]
+            Windows,
+            [Description("Linux")]
+            Linux
+        }
 
         /// <summary>
         /// OSの種類
@@ -49,5 +57,21 @@ namespace RemoteAccessUtility
             }
         }
         private OperatingSystemType _osType;
+    }
+
+    public static class EnumExtensions
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static string ToString(this Environment.OperatingSystemType type)
+        {
+            var member = type.GetType().GetMember(type.ToString());
+            var attributes = member[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+            var description = ((DescriptionAttribute)attributes[0]).Description;
+            return description;
+        }
     }
 }

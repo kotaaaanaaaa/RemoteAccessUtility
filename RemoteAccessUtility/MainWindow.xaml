@@ -25,14 +25,21 @@
                     </DataTemplate>
                 </DataGridTemplateColumn.CellTemplate>
             </DataGridTemplateColumn>
-            <DataGridTextColumn Binding="{Binding HostName}" Header="Name">
+            <DataGridTextColumn Binding="{Binding HostName}" Header="Name" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}">
                 <DataGridTextColumn.ElementStyle>
                     <Style TargetType="TextBlock">
                         <Setter Property="VerticalAlignment" Value="Center" />
                     </Style>
                 </DataGridTextColumn.ElementStyle>
             </DataGridTextColumn>
-            <DataGridTextColumn Binding="{Binding ConnectionAddress}" Header="IP Address / hostName">
+            <DataGridTextColumn Binding="{Binding ConnectionAddress}" Header="IP Address / hostName" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}">
+                <DataGridTextColumn.ElementStyle>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                    </Style>
+                </DataGridTextColumn.ElementStyle>
+            </DataGridTextColumn>
+            <DataGridTextColumn Binding="{Binding OsType}" Header="OS" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}">
                 <DataGridTextColumn.ElementStyle>
                     <Style TargetType="TextBlock">
                         <Setter Property="VerticalAlignment" Value="Center" />
