@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Windows.Input;
+using CoreUtilitiesPack;
 
 namespace RemoteAccessUtility
 {
@@ -12,6 +13,7 @@ namespace RemoteAccessUtility
         /// <summary>
         /// ホスト名(表示用)
         /// </summary>
+        [Record(Name = "hostName", Type = RecordAttribute.FieldType.TEXT)]
         public string HostName
         {
             get => _hostName;
@@ -25,6 +27,7 @@ namespace RemoteAccessUtility
         /// <summary>
         /// RDC接続先アドレス
         /// </summary>
+        [Record(Name = "connectionAddress", Type = RecordAttribute.FieldType.TEXT)]
         public string ConnectionAddress
         {
             get => _connectionAddress;
@@ -44,7 +47,6 @@ namespace RemoteAccessUtility
             [Description("Linux")]
             Linux
         }
-
         /// <summary>
         /// OSの種類
         /// </summary>
@@ -57,6 +59,13 @@ namespace RemoteAccessUtility
             }
         }
         private OperatingSystemType _osType;
+
+        [Record(Name = "osType", Type = RecordAttribute.FieldType.INTEGER)]
+        private int OsTypeInt
+        {
+            get => (int)OsType;
+            set => OsType = (OperatingSystemType)value;
+        }
     }
 
     public static class EnumExtensions

@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteAccessUtility", "RemoteAccessUtility\RemoteAccessUtility.csproj", "{068BEFE1-1DA6-4A6D-975F-84376A712C8C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CoreUtilitiesPack", "CoreUtilitiesPack", "{AC227C5A-8E1E-48EB-9905-686CFB38BBFD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreUtilitiesPack.SqliteAccessor", "..\CoreUtilitiesPack\CoreUtilitiesPack.SqliteAccessor\CoreUtilitiesPack.SqliteAccessor.csproj", "{77F5BF73-30FF-4689-B750-17FF149B07D9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,9 +19,16 @@ Global
 		{068BEFE1-1DA6-4A6D-975F-84376A712C8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{068BEFE1-1DA6-4A6D-975F-84376A712C8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{068BEFE1-1DA6-4A6D-975F-84376A712C8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77F5BF73-30FF-4689-B750-17FF149B07D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77F5BF73-30FF-4689-B750-17FF149B07D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77F5BF73-30FF-4689-B750-17FF149B07D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77F5BF73-30FF-4689-B750-17FF149B07D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{77F5BF73-30FF-4689-B750-17FF149B07D9} = {AC227C5A-8E1E-48EB-9905-686CFB38BBFD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {88211329-B4FD-41A9-82EA-D2CBD5539283}
