@@ -1,0 +1,86 @@
+﻿<UserControl x:Class="RemoteAccessUtility.EnvironmentEditDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:system="clr-namespace:System;assembly=mscorlib" 
+             xmlns:local="clr-namespace:RemoteAccessUtility"
+             xmlns:rule="clr-namespace:RemoteAccessUtility.Validations"
+             xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" >
+    <UserControl.Resources>
+        <ObjectDataProvider x:Key="OperatingSystemType"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type local:OperatingSystemType}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:OperatingSystemType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+    <StackPanel Margin="16"
+                Width="240">
+        <ComboBox x:Name ="EnvironmentsList"
+                  SelectionChanged="EnvironmentsList_SelectionChanged"
+                  DisplayMemberPath="HostName"
+                  Margin="0 8 0 0">
+        </ComboBox>
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0 8 0 8">
+            <Button x:Name="AddEnvironment"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                    Click="AddEnvironment_Click"
+                    Height="24"
+                    Width="24"
+                    Margin="4 0 4 0">
+                <material:PackIcon Kind="PlusCircleOutline" />
+            </Button>
+            <Button x:Name="RemoveEnvironment"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                    Click="RemoveEnvironment_Click"
+                    Height="24"
+                    Width="24"
+                    Margin="4 0 4 0">
+                <material:PackIcon Kind="MinusCircleOutline" />
+            </Button>
+        </StackPanel>
+        <TextBox x:Name="HostName"
+                 material:HintAssist.Hint="Name"
+                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                 Margin="0 8 0 8">
+            <TextBox.Text>
+                <Binding Path="HostName"
+                         UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <rule:NotEmptyValidationRule ValidatesOnTargetUpdated="True"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+        <TextBox x:Name="ConnectionAddress"
+                 material:HintAssist.Hint="IP Address / Host Name"
+                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                 Margin="0 8 0 8">
+            <TextBox.Text>
+                <Binding Path="ConnectionAddress"
+                         UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <rule:NotEmptyValidationRule ValidatesOnTargetUpdated="True"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+        <ComboBox x:Name="OperatingSystem"
+                  HorizontalAlignment="Left" 
+                  material:HintAssist.Hint="OS"
+                  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                  ItemsSource="{Binding Source={StaticResource OperatingSystemType}}"
+                  SelectedItem="{Binding Path=OsType}"
+                  VerticalAlignment="Top" Margin="0 5 0 5">
+        </ComboBox>
+        <Button Content="Close"
+                Margin="0 8 8 0"
+                Style="{DynamicResource MaterialDesignFlatButton}"
+                Command="{x:Static material:DialogHost.CloseDialogCommand}"/>
+    </StackPanel>
+</UserControl>

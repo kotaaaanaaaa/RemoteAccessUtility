@@ -20,6 +20,7 @@ namespace RemoteAccessUtility
             Display = new DisplayOption(_options);
             LocalResource = new LocalResourceOption(_options);
             Experience = new ExperienceOption(_options);
+            Detail = new DetailOption(_options);
         }
 
         public void Write(string filename)

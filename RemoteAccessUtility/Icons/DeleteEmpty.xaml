@@ -1,0 +1,13 @@
+﻿<UserControl x:Class="RemoteAccessUtility.Icons.DeleteEmpty"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RemoteAccessUtility.Icons"
+             mc:Ignorable="d" >
+    <!-- https://materialdesignicons.com/icon/delete-empty -->
+    <Canvas Width="24" Height="24">
+        <Path Data="M20.37,8.91L19.37,10.64L7.24,3.64L8.24,1.91L11.28,3.66L12.64,3.29L16.97,5.79L17.34,7.16L20.37,8.91M6,19V7H11.07L18,11V19A2,2 0 0,1 16,21H8A2,2 0 0,1 6,19Z"
+              Fill="white" />
+    </Canvas>
+</UserControl>

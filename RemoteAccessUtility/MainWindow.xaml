@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RemoteAccessUtility"
+        xmlns:icon="clr-namespace:RemoteAccessUtility.Icons"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
@@ -14,38 +15,91 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <DataGrid Name="EnvironmentList"
-              AutoGenerateColumns="False"
-              CanUserAddRows="False">
-        <DataGrid.Columns>
-            <DataGridTemplateColumn>
-                <DataGridTemplateColumn.CellTemplate>
-                    <DataTemplate>
-                        <Button Content="Connect" Command="{Binding Connect}" CommandParameter="{Binding}"/>
-                    </DataTemplate>
-                </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
-            <DataGridTextColumn Binding="{Binding HostName}" Header="Name" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}">
-                <DataGridTextColumn.ElementStyle>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="VerticalAlignment" Value="Center" />
-                    </Style>
-                </DataGridTextColumn.ElementStyle>
-            </DataGridTextColumn>
-            <DataGridTextColumn Binding="{Binding ConnectionAddress}" Header="IP Address / hostName" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}">
-                <DataGridTextColumn.ElementStyle>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="VerticalAlignment" Value="Center" />
-                    </Style>
-                </DataGridTextColumn.ElementStyle>
-            </DataGridTextColumn>
-            <DataGridTextColumn Binding="{Binding OsType}" Header="OS" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}">
-                <DataGridTextColumn.ElementStyle>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="VerticalAlignment" Value="Center" />
-                    </Style>
-                </DataGridTextColumn.ElementStyle>
-            </DataGridTextColumn>
-        </DataGrid.Columns>
-    </DataGrid>
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <materialDesign:DialogHost x:Name="dialogHost">
+        <Grid>
+            <DataGrid Name="EnvironmentList"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Command="{Binding Connect}"
+                                        CommandParameter="{Binding}"
+                                        ToolTip="Connect this computer"
+                                        Margin ="0,-10,0,-10">
+                                    <icon:RemoteDesktop/>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Binding="{Binding HostName}"
+                                        Header="Name"
+                                        EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment"
+                                        Value="Center" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding ConnectionAddress}"
+                                        Header="IP Address / Host Name"
+                                        EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment"
+                                        Value="Center" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding OsType}"
+                                        Header="OS"
+                                        EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment"
+                                        Value="Center" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <materialDesign:PopupBox Style="{StaticResource MaterialDesignMultiFloatingActionPopupBox}"
+                                     PlacementMode="LeftAndAlignMiddles"
+                                     UnfurlOrientation="Horizontal"
+                                     HorizontalAlignment="Right"
+                                     VerticalAlignment="Bottom"
+                                     ToolTip="Options"
+                                     Grid.Row="1"
+                                     Margin="0 0 10 10">
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="EnvironmentEdit"
+                            ToolTip="Edit environment"
+                            Click="EnvironmentEdit_Click">
+                        <icon:RemoteDesktopEdit/>
+                    </Button>
+                    <Button x:Name="AccountEdit"
+                            ToolTip="Edit account"
+                            Click="AccountEdit_Click">
+                        <icon:AccountEdit/>
+                    </Button>
+                    <Button x:Name="Setting"
+                            ToolTip="Setting"
+                            Click="Setting_Click">
+                        <icon:Settings/>
+                    </Button>
+                </StackPanel>
+            </materialDesign:PopupBox>
+        </Grid>
+    </materialDesign:DialogHost>
 </Window>

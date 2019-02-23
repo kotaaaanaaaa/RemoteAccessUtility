@@ -9,6 +9,7 @@ namespace RemoteAccessUtility
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ICommand Connect { get; set; } = new ConnectCommand();
+        public ICommand Delete { get; set; } = new ConnectCommand();
 
         /// <summary>
         /// ホスト名(表示用)
@@ -37,16 +38,6 @@ namespace RemoteAccessUtility
             }
         }
         private string _connectionAddress;
-
-        public enum OperatingSystemType
-        {
-            [Description("Unknown")]
-            UnKnown,
-            [Description("Windows")]
-            Windows,
-            [Description("Linux")]
-            Linux
-        }
         /// <summary>
         /// OSの種類
         /// </summary>
@@ -68,6 +59,16 @@ namespace RemoteAccessUtility
         }
     }
 
+    public enum OperatingSystemType
+    {
+        [Description("Unknown")]
+        UnKnown,
+        [Description("Windows")]
+        Windows,
+        [Description("Linux")]
+        Linux
+    }
+
     public static class EnumExtensions
     {
         /// <summary>
@@ -75,7 +76,7 @@ namespace RemoteAccessUtility
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static string ToString(this Environment.OperatingSystemType type)
+        public static string ToString(this OperatingSystemType type)
         {
             var member = type.GetType().GetMember(type.ToString());
             var attributes = member[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
