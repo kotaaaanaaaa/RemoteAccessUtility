@@ -41,7 +41,7 @@ namespace RemoteAccessUtility
             var record = new Account()
             {
                 Name = @"administrator",
-                PlainPassword = @"password",
+                Password = @"password",
             };
             var sql = SqliteAccessor.GetCreateTableSQL("account", record);
             db.ExecuteNonQuery(sql);

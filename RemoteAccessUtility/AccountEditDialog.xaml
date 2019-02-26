@@ -49,18 +49,31 @@
                 </Binding>
             </TextBox.Text>
         </TextBox>
-        <PasswordBox
+        <TextBox
             x:Name="Password"
             material:HintAssist.Hint="Password"
-            Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
+            TextChanged="Password_OnTextChanged"
+            Text ="{Binding DisplayPassword}"
+            Style="{StaticResource MaterialDesignFloatingHintTextBox}"
             Margin="0 8 0 8">
-            <i:Interaction.Behaviors>
-                <local:SecurePasswordBindingBehavior 
-                    SecurePassword="{Binding Password, Mode=TwoWay}"/>
-            </i:Interaction.Behaviors>
-        </PasswordBox>
-        <Button Content="Close"
-                Style="{DynamicResource MaterialDesignFlatButton}"
-                Command="{x:Static material:DialogHost.CloseDialogCommand}"/>
+        </TextBox>
+        <TextBox
+            x:Name="Confirm"
+            material:HintAssist.Hint="Confirm Password"
+            TextChanged="Confirm_OnTextChanged"
+            Text ="{Binding DisplayConfirm}"
+            Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+            Margin="0 8 0 8">
+        </TextBox>
+        <StackPanel
+            Orientation="Horizontal"
+            HorizontalAlignment="Right">
+            <Button Content="Save"
+                    Style="{DynamicResource MaterialDesignFlatButton}"/>
+            <Button Content="Close"
+                    IsDefault="True"
+                    Style="{DynamicResource MaterialDesignFlatButton}"
+                    Command="{x:Static material:DialogHost.CloseDialogCommand}"/>
+        </StackPanel>
     </StackPanel>
 </UserControl>

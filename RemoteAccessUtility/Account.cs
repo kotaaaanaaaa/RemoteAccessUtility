@@ -27,28 +27,19 @@ namespace RemoteAccessUtility
         /// <summary>
         /// パスワード
         /// </summary>
-        public SecureString Password
+        [Record(Name = "password", Type = RecordAttribute.FieldType.TEXT)]
+        public string Password
         {
-            get => new NetworkCredential("", _password).SecurePassword;
+            get => new NetworkCredential("", _password).Password;
             set
             {
-                var password = new NetworkCredential("", value).Password;
-                if (_password.Equals(password))
+                var password = new NetworkCredential("", value).SecurePassword;
+                if (password.Equals(_password))
                     return;
                 _password = password;
                 PropertyChanged.Raise(() => Password);
             }
         }
-
-        [Record(Name = "password", Type = RecordAttribute.FieldType.TEXT)]
-        public string PlainPassword
-        {
-            get => _password;
-            set
-            {
-                _password = value;
-            }
-        }
-        private string _password;
+        private SecureString _password;
     }
 }
