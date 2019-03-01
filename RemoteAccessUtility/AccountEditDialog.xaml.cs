@@ -74,11 +74,15 @@ namespace RemoteAccessUtility
             var now = selectedItem.Password;
 
             var newText = GetText(textBox, now);
+            
             if (newText == now)
                 return;
             selectedItem.Password = newText;
 
             if (OnPasswordChanging)
+                return;
+
+            if (now.IndexOf(newText) == 0)
                 return;
 
             var newGuid = Guid.NewGuid();
@@ -98,11 +102,15 @@ namespace RemoteAccessUtility
             var now = selectedItem.Confirm;
 
             var newText = GetText(textBox, now);
+            
             if (newText == now)
                 return;
             selectedItem.Confirm = newText;
 
             if (OnConfirmChanging)
+                return;
+
+            if (now.IndexOf(newText) == 0)
                 return;
 
             var newGuid = Guid.NewGuid();
