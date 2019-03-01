@@ -39,12 +39,7 @@ namespace RemoteAccessUtility
             var selectedItem = (Account)AccountsList.SelectedItem;
             if (selectedItem == null) return;
 
-            var model = new AccountEditDialogViewModel();
-            model.Name = selectedItem.Name;
-            model.Password = selectedItem.Password;
-            model.Confirm = selectedItem.Password;
-            model.DisplayPassword = "".PadLeft(model.Password.Length, MaskChar);
-            model.DisplayConfirm = "".PadLeft(model.Confirm.Length, MaskChar);
+            var model = new AccountEditDialogViewModel(selectedItem, MaskChar);
             DataContext = model;
 
             Password.Select(model.Password.Length, 0);

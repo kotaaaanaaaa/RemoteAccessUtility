@@ -15,6 +15,15 @@ namespace RemoteAccessUtility
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public AccountEditDialogViewModel(Account account, char maskChar)
+        {
+            Name = account.Name;
+            Password = account.Password;
+            Confirm = account.Password;
+            DisplayPassword = "".PadLeft(Password.Length, maskChar);
+            DisplayConfirm = "".PadLeft(Confirm.Length, maskChar);
+        }
+
         /// <summary>
         /// ユーザー名
         /// </summary>
