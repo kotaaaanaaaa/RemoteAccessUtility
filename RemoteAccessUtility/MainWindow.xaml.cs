@@ -1,11 +1,9 @@
-﻿using System;
+﻿using CoreUtilitiesPack;
+using MaterialDesignThemes.Wpf;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
-using System.Windows.Documents;
-using System.Windows.Input;
-using CoreUtilitiesPack;
-using MaterialDesignThemes.Wpf;
 
 namespace RemoteAccessUtility
 {
@@ -54,11 +52,13 @@ namespace RemoteAccessUtility
             if (db.HasTable("environment"))
                 return;
 
+            var accounts = (IEnumerable<Account>)SelectAccounts();
             var record = new Environment()
             {
                 HostName = @"localhost",
                 ConnectionAddress = @"127.0.0.1",
                 OsType = OperatingSystemType.Windows,
+                AccountGuid = accounts.First().Guid,
             };
             var sql = SqliteAccessor.GetCreateTableSQL("environment", record);
             db.ExecuteNonQuery(sql);
@@ -84,7 +84,7 @@ namespace RemoteAccessUtility
 
         private async void EnvironmentEdit_Click(object sender, RoutedEventArgs e)
         {
-            var dialogView = new EnvironmentEditDialog(Environments);
+            var dialogView = new EnvironmentEditDialog(Environments, Accounts);
             var result = await dialogHost.ShowDialog(dialogView);
         }
 

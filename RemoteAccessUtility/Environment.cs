@@ -1,6 +1,6 @@
-﻿using System.ComponentModel;
+﻿using CoreUtilitiesPack;
+using System.ComponentModel;
 using System.Windows.Input;
-using CoreUtilitiesPack;
 
 namespace RemoteAccessUtility
 {
@@ -15,48 +15,30 @@ namespace RemoteAccessUtility
         /// ホスト名(表示用)
         /// </summary>
         [Record(Name = "hostName", Type = RecordAttribute.FieldType.TEXT)]
-        public string HostName
-        {
-            get => _hostName;
-            set
-            {
-                PropertyChanged.RaiseIfSet(() => HostName, ref _hostName, value);
-            }
-        }
-        private string _hostName;
+        public string HostName { get; set; }
 
         /// <summary>
         /// RDC接続先アドレス
         /// </summary>
         [Record(Name = "connectionAddress", Type = RecordAttribute.FieldType.TEXT)]
-        public string ConnectionAddress
-        {
-            get => _connectionAddress;
-            set
-            {
-                PropertyChanged.RaiseIfSet(() => ConnectionAddress, ref _connectionAddress, value);
-            }
-        }
-        private string _connectionAddress;
+        public string ConnectionAddress { get; set; }
+
         /// <summary>
         /// OSの種類
         /// </summary>
-        public OperatingSystemType OsType
-        {
-            get => _osType;
-            set
-            {
-                PropertyChanged.RaiseIfSet(() => OsType, ref _osType, value);
-            }
-        }
-        private OperatingSystemType _osType;
-
+        public OperatingSystemType OsType { get; set; }
         [Record(Name = "osType", Type = RecordAttribute.FieldType.INTEGER)]
         private int OsTypeInt
         {
             get => (int)OsType;
             set => OsType = (OperatingSystemType)value;
         }
+
+        /// <summary>
+        /// アカウントのGuid
+        /// </summary>
+        [Record(Name = "accountGUid", Type = RecordAttribute.FieldType.TEXT)]
+        public string AccountGuid { get; set; }
     }
 
     public enum OperatingSystemType

@@ -69,6 +69,7 @@
     <Compile Include="EnvironmentEditDialog.xaml.cs">
       <DependentUpon>EnvironmentEditDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="EnvironmentEditDialogViewModel.cs" />
     <Compile Include="Icons\AccountEdit.xaml.cs">
       <DependentUpon>AccountEdit.xaml</DependentUpon>
     </Compile>

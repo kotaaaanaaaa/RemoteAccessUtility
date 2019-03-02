@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Net;
-using System.Security;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
 using TextBox = System.Windows.Controls.TextBox;
 using UserControl = System.Windows.Controls.UserControl;
 
@@ -39,11 +34,11 @@ namespace RemoteAccessUtility
             var selectedItem = (Account)AccountsList.SelectedItem;
             if (selectedItem == null) return;
 
-            var model = new AccountEditDialogViewModel(selectedItem, MaskChar);
-            DataContext = model;
+            var vm = new AccountEditDialogViewModel(selectedItem, MaskChar);
+            DataContext = vm;
 
-            Password.Select(model.Password.Length, 0);
-            Confirm.Select(model.Confirm.Length, 0);
+            Password.Select(vm.Password.Length, 0);
+            Confirm.Select(vm.Confirm.Length, 0);
         }
 
         private async void AddAccount_Click(object sender, RoutedEventArgs e)

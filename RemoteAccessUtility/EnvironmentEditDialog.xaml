@@ -18,69 +18,87 @@
         </ObjectDataProvider>
     </UserControl.Resources>
     <StackPanel Margin="16"
-                Width="240">
-        <ComboBox x:Name ="EnvironmentsList"
-                  SelectionChanged="EnvironmentsList_SelectionChanged"
-                  DisplayMemberPath="HostName"
-                  Margin="0 8 0 0">
-        </ComboBox>
-        <StackPanel Orientation="Horizontal"
-                    HorizontalAlignment="Right"
-                    Margin="0 8 0 8">
-            <Button x:Name="AddEnvironment"
-                    Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                    Click="AddEnvironment_Click"
-                    Height="24"
-                    Width="24"
-                    Margin="4 0 4 0">
-                <material:PackIcon Kind="PlusCircleOutline" />
-            </Button>
-            <Button x:Name="RemoveEnvironment"
-                    Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                    Click="RemoveEnvironment_Click"
-                    Height="24"
-                    Width="24"
-                    Margin="4 0 4 0">
-                <material:PackIcon Kind="MinusCircleOutline" />
-            </Button>
+                Width="480">
+        <StackPanel Orientation="Horizontal">
+            <StackPanel Width="235"
+                        Margin="0 0 5 0">
+                <ComboBox x:Name ="EnvironmentsList"
+                          SelectionChanged="EnvironmentsList_SelectionChanged"
+                          DisplayMemberPath="HostName"
+                          Margin="0 8 0 8">
+                </ComboBox>
+                <TextBox x:Name="HostName"
+                         material:HintAssist.Hint="Name"
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         Margin="0 8 0 8">
+                    <TextBox.Text>
+                        <Binding Path="HostName"
+                                 UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <rule:NotEmptyValidationRule ValidatesOnTargetUpdated="True"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+                <TextBox x:Name="ConnectionAddress"
+                         material:HintAssist.Hint="IP Address / Host Name"
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         Margin="0 8 0 8">
+                    <TextBox.Text>
+                        <Binding Path="ConnectionAddress"
+                                 UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <rule:NotEmptyValidationRule ValidatesOnTargetUpdated="True"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+                <ComboBox x:Name="OperatingSystem"
+                          HorizontalAlignment="Left" 
+                          material:HintAssist.Hint="OS"
+                          Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                          ItemsSource="{Binding Source={StaticResource OperatingSystemType}}"
+                          SelectedItem="{Binding Path=OsType}"
+                          VerticalAlignment="Top"
+                          Margin="0 5 0 5">
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Width="235"
+                        Margin="5 0 0 0">
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="AddEnvironment"
+                        Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                        Click="AddEnvironment_Click"
+                        Height="24"
+                        Width="24"
+                        Margin="4 10 4 10">
+                        <material:PackIcon Kind="PlusCircleOutline" />
+                    </Button>
+                    <Button x:Name="RemoveEnvironment"
+                        Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                        Click="RemoveEnvironment_Click"
+                        Height="24"
+                        Width="24"
+                        Margin="4 10 4 10">
+                        <material:PackIcon Kind="MinusCircleOutline" />
+                    </Button>
+                </StackPanel>
+                <ComboBox x:Name ="AccountsList"
+                          DisplayMemberPath="Name"
+                          Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                          Margin="0 5 0 0"
+                          material:HintAssist.Hint="Account">
+                </ComboBox>
+            </StackPanel>
         </StackPanel>
-        <TextBox x:Name="HostName"
-                 material:HintAssist.Hint="Name"
-                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                 Margin="0 8 0 8">
-            <TextBox.Text>
-                <Binding Path="HostName"
-                         UpdateSourceTrigger="PropertyChanged">
-                    <Binding.ValidationRules>
-                        <rule:NotEmptyValidationRule ValidatesOnTargetUpdated="True"/>
-                    </Binding.ValidationRules>
-                </Binding>
-            </TextBox.Text>
-        </TextBox>
-        <TextBox x:Name="ConnectionAddress"
-                 material:HintAssist.Hint="IP Address / Host Name"
-                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                 Margin="0 8 0 8">
-            <TextBox.Text>
-                <Binding Path="ConnectionAddress"
-                         UpdateSourceTrigger="PropertyChanged">
-                    <Binding.ValidationRules>
-                        <rule:NotEmptyValidationRule ValidatesOnTargetUpdated="True"/>
-                    </Binding.ValidationRules>
-                </Binding>
-            </TextBox.Text>
-        </TextBox>
-        <ComboBox x:Name="OperatingSystem"
-                  HorizontalAlignment="Left" 
-                  material:HintAssist.Hint="OS"
-                  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                  ItemsSource="{Binding Source={StaticResource OperatingSystemType}}"
-                  SelectedItem="{Binding Path=OsType}"
-                  VerticalAlignment="Top" Margin="0 5 0 5">
-        </ComboBox>
-        <Button Content="Close"
-                Margin="0 8 8 0"
-                Style="{DynamicResource MaterialDesignFlatButton}"
-                Command="{x:Static material:DialogHost.CloseDialogCommand}"/>
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button Content="Save"
+                    Style="{DynamicResource MaterialDesignFlatButton}"/>
+            <Button Content="Close"
+                    Margin="0 0 0 0"
+                    Style="{DynamicResource MaterialDesignFlatButton}"
+                    Command="{x:Static material:DialogHost.CloseDialogCommand}"/>
+        </StackPanel>
     </StackPanel>
 </UserControl>

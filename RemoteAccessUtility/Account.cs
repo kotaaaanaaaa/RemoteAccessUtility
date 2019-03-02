@@ -1,28 +1,16 @@
-﻿using System.ComponentModel;
+﻿using CoreUtilitiesPack;
 using System.Net;
-using System.Runtime.InteropServices;
 using System.Security;
-using CoreUtilitiesPack;
 
 namespace RemoteAccessUtility
 {
-    public class Account : INotifyPropertyChanged
+    public class Account
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         /// <summary>
         /// ユーザー名
         /// </summary>
         [Record(Name = "name", Type = RecordAttribute.FieldType.TEXT)]
-        public string Name
-        {
-            get => _name;
-            set
-            {
-                PropertyChanged.RaiseIfSet(() => Name, ref _name, value);
-            }
-        }
-        private string _name;
+        public string Name { get; set; }
 
         /// <summary>
         /// パスワード
@@ -34,12 +22,20 @@ namespace RemoteAccessUtility
             set
             {
                 var password = new NetworkCredential("", value).SecurePassword;
-                if (password.Equals(_password))
-                    return;
                 _password = password;
-                PropertyChanged.Raise(() => Password);
             }
         }
         private SecureString _password;
+
+        /// <summary>
+        /// GUID
+        /// </summary>
+        [Record(Name = "guid", Type = RecordAttribute.FieldType.TEXT)]
+        public string Guid
+        {
+            get => _guid ?? System.Guid.NewGuid().ToString();
+            set => _guid = value;
+        }
+        private string _guid = null;
     }
 }
