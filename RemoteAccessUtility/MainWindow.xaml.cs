@@ -12,7 +12,7 @@ namespace RemoteAccessUtility
     /// </summary>
     public partial class MainWindow : Window
     {
-        public ObservableCollection<Environment> Environments = new ObservableCollection<Environment>();
+        public List<Environment> Environments = new List<Environment>();
         public List<Account> Accounts = new List<Account>();
         private static SqliteAccessor db = new SqliteAccessor();
 

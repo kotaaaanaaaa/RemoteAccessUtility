@@ -6,6 +6,7 @@ namespace RemoteAccessUtility
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public EnvironmentEditDialogViewModel() { }
         public EnvironmentEditDialogViewModel(Environment env)
         {
             HostName = env.HostName;
