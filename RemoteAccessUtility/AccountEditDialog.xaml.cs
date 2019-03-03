@@ -54,8 +54,8 @@ namespace RemoteAccessUtility
             if (AccountViewModels.Count <= 1) return;
             var selectedItem = (AccountEditDialogViewModel)AccountsList.SelectedItem;
             if (selectedItem == null) return;
-            AccountViewModels.Remove(selectedItem);
             AccountsList.SelectedIndex = 0;
+            AccountViewModels.Remove(selectedItem);
         }
 
         private async void Password_OnTextChanged(object sender, TextChangedEventArgs e)
