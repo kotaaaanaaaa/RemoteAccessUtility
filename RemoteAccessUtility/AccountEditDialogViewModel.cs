@@ -8,6 +8,7 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 
 namespace RemoteAccessUtility
 {
@@ -15,6 +16,7 @@ namespace RemoteAccessUtility
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public AccountEditDialogViewModel() { }
         public AccountEditDialogViewModel(Account account, char maskChar)
         {
             Name = account.Name;
@@ -101,6 +103,16 @@ namespace RemoteAccessUtility
         }
         private string _displayConfirm;
 
+        public bool Equals(Account account)
+        {
+            if (Name != account.Name)
+                return false;
+            if (Password != account.Password)
+                return false;
+
+            return true;
+        }
+
         #region Validataion
 
         /// <summary>
@@ -164,11 +176,7 @@ namespace RemoteAccessUtility
 
         private void OnErrorsChanged(string propertyName)
         {
-            var h = this.ErrorsChanged;
-            if (h != null)
-            {
-                h(this, new DataErrorsChangedEventArgs(propertyName));
-            }
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
         }
 
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,47 +14,47 @@ namespace RemoteAccessUtility
     /// </summary>
     public partial class AccountEditDialog : UserControl
     {
-        private IList<Account> Accounts;
+        public ObservableCollection<AccountEditDialogViewModel> AccountViewModels;
+        public List<Account> Accounts;
         private readonly char MaskChar = '●';
         private Guid PasswordEncryptGuid;
         private bool OnPasswordChanging = false;
         private Guid ConfirmEncryptGuid;
         private bool OnConfirmChanging = false;
 
-        public AccountEditDialog(IList<Account> accounts)
+        public AccountEditDialog(List<Account> accounts)
         {
             Accounts = accounts;
+            AccountViewModels = new ObservableCollection<AccountEditDialogViewModel>();
+            Accounts.ForEach(x => { AccountViewModels.Add(new AccountEditDialogViewModel(x, MaskChar)); });
 
             InitializeComponent();
-            AccountsList.ItemsSource = Accounts;
+            AccountsList.ItemsSource = AccountViewModels;
             AccountsList.SelectedIndex = 0;
         }
 
         private async void AccountsList_SelectionChanged(object sender, RoutedEventArgs e)
         {
-            var selectedItem = (Account)AccountsList.SelectedItem;
-            if (selectedItem == null) return;
+            var selectedItem = (AccountEditDialogViewModel)AccountsList.SelectedItem;
+            DataContext = selectedItem;
 
-            var vm = new AccountEditDialogViewModel(selectedItem, MaskChar);
-            DataContext = vm;
-
-            Password.Select(vm.Password.Length, 0);
-            Confirm.Select(vm.Confirm.Length, 0);
+            Password.Select(selectedItem.Password.Length, 0);
+            Confirm.Select(selectedItem.Confirm.Length, 0);
         }
 
         private async void AddAccount_Click(object sender, RoutedEventArgs e)
         {
-            var newAccount = new Account();
-            Accounts.Add(newAccount);
+            var newAccount = new AccountEditDialogViewModel();
+            AccountViewModels.Add(newAccount);
             AccountsList.SelectedItem = newAccount;
         }
 
         private async void RemoveAccount_Click(object sender, RoutedEventArgs e)
         {
-            if (Accounts.Count <= 1) return;
-            var selectedItem = (Account)AccountsList.SelectedItem;
+            if (AccountViewModels.Count <= 1) return;
+            var selectedItem = (AccountEditDialogViewModel)AccountsList.SelectedItem;
             if (selectedItem == null) return;
-            Accounts.Remove(selectedItem);
+            AccountViewModels.Remove(selectedItem);
             AccountsList.SelectedIndex = 0;
         }
 
@@ -64,7 +65,7 @@ namespace RemoteAccessUtility
             var now = selectedItem.Password;
 
             var newText = GetText(textBox, now);
-            
+
             if (newText == now)
                 return;
             selectedItem.Password = newText;
@@ -92,7 +93,7 @@ namespace RemoteAccessUtility
             var now = selectedItem.Confirm;
 
             var newText = GetText(textBox, now);
-            
+
             if (newText == now)
                 return;
             selectedItem.Confirm = newText;
@@ -153,6 +154,22 @@ namespace RemoteAccessUtility
             textBox.Text = text;
             changing = false;
             textBox.Select(text.Length, 0);
+        }
+
+        private void SaveAcount()
+        {
+            //var selectedItem = (Account)AccountsList.SelectedItem;
+
+            //if (ViewModel == null)
+            //    return;
+            //if (selectedItem == null)
+            //    return;
+
+            //if (!ViewModel.Equals(selectedItem))
+            //{
+            //    selectedItem.Name = ViewModel.Name;
+            //    selectedItem.Password = ViewModel.Password;
+            //}
         }
     }
 }
