@@ -84,6 +84,7 @@
                     </Button>
                 </StackPanel>
                 <ComboBox x:Name ="AccountsList"
+                          SelectionChanged="AccountsList_SelectionChanged"
                           DisplayMemberPath="Name"
                           Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                           Margin="0 5 0 0"

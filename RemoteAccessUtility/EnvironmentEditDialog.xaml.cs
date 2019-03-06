@@ -53,5 +53,12 @@ namespace RemoteAccessUtility
             EnvironmentsList.SelectedIndex = 0;
             EnvironmentViewModels.Remove(selectedItem);
         }
+
+        private async void AccountsList_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            var selectedItem = (Account)AccountsList.SelectedItem;
+            var viewModel = (EnvironmentEditDialogViewModel)EnvironmentsList.SelectedItem;
+            viewModel.AccountGuid = selectedItem.Guid;
+        }
     }
 }
