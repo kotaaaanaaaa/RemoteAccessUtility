@@ -34,35 +34,29 @@
         </StackPanel>
         <TextBox x:Name="AccountName"
                  material:HintAssist.Hint="Name"
+                 Text="{Binding Name}"
                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                  Margin="0 8 0 8">
-            <TextBox.Text>
-                <Binding Path="Name"
-                         UpdateSourceTrigger="PropertyChanged">
-                    <Binding.ValidationRules>
-                        <rule:NotEmptyValidationRule ValidatesOnTargetUpdated="True"/>
-                    </Binding.ValidationRules>
-                </Binding>
-            </TextBox.Text>
         </TextBox>
         <TextBox x:Name="Password"
                  material:HintAssist.Hint="Password"
                  TextChanged="Password_OnTextChanged"
-                 Text ="{Binding DisplayPassword}"
+                 Text="{Binding DisplayPassword}"
                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                  Margin="0 8 0 8">
         </TextBox>
         <TextBox x:Name="Confirm"
                  material:HintAssist.Hint="Confirm Password"
                  TextChanged="Confirm_OnTextChanged"
-                 Text ="{Binding DisplayConfirm}"
+                 Text="{Binding DisplayConfirm}"
                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                  Margin="0 8 0 8">
         </TextBox>
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Right">
             <Button Content="Save"
-                    Style="{DynamicResource MaterialDesignFlatButton}"/>
+                    Style="{DynamicResource MaterialDesignFlatButton}"
+                    IsEnabled="{Binding CanSave}"/>
             <Button Content="Close"
                     IsDefault="True"
                     Style="{DynamicResource MaterialDesignFlatButton}"

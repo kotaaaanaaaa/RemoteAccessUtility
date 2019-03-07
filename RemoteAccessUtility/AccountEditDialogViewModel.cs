@@ -12,8 +12,14 @@ namespace RemoteAccessUtility
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public AccountEditDialogViewModel() { }
-        public AccountEditDialogViewModel(Account account, char maskChar)
+        public AccountEditDialogViewModel()
+        {
+            ValidateName();
+            ValidatePassword();
+            PropertyChanged.Raise(() => CanSave);
+        }
+
+        public AccountEditDialogViewModel(Account account, char maskChar) : this()
         {
             Name = account.Name;
             Password = account.Password;
@@ -31,6 +37,9 @@ namespace RemoteAccessUtility
             set
             {
                 PropertyChanged.RaiseIfSet(() => Name, ref _name, value);
+
+                ValidateName();
+                PropertyChanged.Raise(() => CanSave);
             }
         }
         private string _name;
@@ -50,6 +59,8 @@ namespace RemoteAccessUtility
 
                 ValidatePassword();
                 PropertyChanged.Raise(() => Password);
+
+                PropertyChanged.Raise(() => CanSave);
             }
         }
         private SecureString _password;
@@ -69,6 +80,8 @@ namespace RemoteAccessUtility
 
                 ValidatePassword();
                 PropertyChanged.Raise(() => Confirm);
+
+                PropertyChanged.Raise(() => CanSave);
             }
         }
         private SecureString _confirm;
@@ -109,7 +122,30 @@ namespace RemoteAccessUtility
             return true;
         }
 
+        /// <summary>
+        /// 保存可否を取得する
+        /// </summary>
+        public bool CanSave
+        {
+            get { return !HasErrors; }
+        }
+
         #region Validataion
+
+        /// <summary>
+        /// ユーザー名を検証する
+        /// </summary>
+        private void ValidateName()
+        {
+            if (string.IsNullOrWhiteSpace(Name))
+            {
+                AddError(() => Name, "Fiels is required.");
+            }
+            else
+            {
+                RemoveError(() => Name);
+            }
+        }
 
         /// <summary>
         /// パスワードを検証する
@@ -122,7 +158,7 @@ namespace RemoteAccessUtility
             }
             else
             {
-                AddError(() => DisplayConfirm, "same string is required.");
+                AddError(() => DisplayConfirm, "Confirm password must be same.");
             }
         }
 
