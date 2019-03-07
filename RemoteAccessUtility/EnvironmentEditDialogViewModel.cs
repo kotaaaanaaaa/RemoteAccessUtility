@@ -1,13 +1,22 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq.Expressions;
 
 namespace RemoteAccessUtility
 {
-    public class EnvironmentEditDialogViewModel : INotifyPropertyChanged
+    public class EnvironmentEditDialogViewModel : INotifyPropertyChanged, INotifyDataErrorInfo
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public EnvironmentEditDialogViewModel() { }
-        public EnvironmentEditDialogViewModel(Environment env)
+        public EnvironmentEditDialogViewModel()
+        {
+            ValidateHostName();
+            ValidateConnectionAddress();
+            PropertyChanged.Raise(() => CanSave);
+        }
+        public EnvironmentEditDialogViewModel(Environment env) : this()
         {
             HostName = env.HostName;
             ConnectionAddress = env.ConnectionAddress;
@@ -24,12 +33,15 @@ namespace RemoteAccessUtility
             set
             {
                 PropertyChanged.RaiseIfSet(() => HostName, ref _hostName, value);
+                ValidateHostName();
+
+                PropertyChanged.Raise(() => CanSave);
             }
         }
         private string _hostName;
 
         /// <summary>
-        /// RDC接続先アドレス
+        /// RDP接続先アドレス
         /// </summary>
         public string ConnectionAddress
         {
@@ -37,6 +49,9 @@ namespace RemoteAccessUtility
             set
             {
                 PropertyChanged.RaiseIfSet(() => ConnectionAddress, ref _connectionAddress, value);
+                ValidateConnectionAddress();
+
+                PropertyChanged.Raise(() => CanSave);
             }
         }
         private string _connectionAddress;
@@ -65,5 +80,112 @@ namespace RemoteAccessUtility
             }
         }
         private string _accountGuid;
+
+        /// <summary>
+        /// 保存可否を取得する
+        /// </summary>
+        public bool CanSave
+        {
+            get { return !HasErrors; }
+        }
+
+        #region Validataion
+
+        /// <summary>
+        /// ホスト名を検証する
+        /// </summary>
+        private void ValidateHostName()
+        {
+            if (string.IsNullOrWhiteSpace(HostName))
+            {
+                AddError(() => HostName, "Fiels is required.");
+            }
+            else
+            {
+                RemoveError(() => HostName);
+            }
+        }
+
+        /// <summary>
+        /// RDP接続先アドレスを検証する
+        /// </summary>
+        private void ValidateConnectionAddress()
+        {
+            if (string.IsNullOrWhiteSpace(ConnectionAddress))
+            {
+                AddError(() => ConnectionAddress, "Fiels is required.");
+            }
+            else
+            {
+                RemoveError(() => ConnectionAddress);
+            }
+        }
+
+        readonly Dictionary<string, List<string>> _currentErrors = new Dictionary<string, List<string>>();
+
+        /// <summary>
+        /// 検証エラーを追加する
+        /// </summary>
+        private void AddError<TResult>(Expression<Func<TResult>> propertyName, string error)
+        {
+            if (!(propertyName.Body is MemberExpression memberEx))
+                throw new ArgumentException();
+
+            if (!(memberEx.Expression is ConstantExpression senderExpression))
+                throw new ArgumentException();
+
+            var name = memberEx.Member.Name;
+
+            if (!_currentErrors.ContainsKey(name))
+                _currentErrors[name] = new List<string>();
+
+            if (!_currentErrors[name].Contains(error))
+            {
+                _currentErrors[name].Add(error);
+                OnErrorsChanged(name);
+            }
+        }
+
+        /// <summary>
+        /// 検証エラーを削除する
+        /// </summary>
+        private void RemoveError<TResult>(Expression<Func<TResult>> propertyName)
+        {
+            if (!(propertyName.Body is MemberExpression memberEx))
+                throw new ArgumentException();
+
+            if (!(memberEx.Expression is ConstantExpression senderExpression))
+                throw new ArgumentException();
+
+            var name = memberEx.Member.Name;
+
+            if (_currentErrors.ContainsKey(name))
+                _currentErrors.Remove(name);
+
+            OnErrorsChanged(name);
+        }
+
+        private void OnErrorsChanged(string propertyName)
+        {
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+        }
+
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
+        public IEnumerable GetErrors(string propertyName)
+        {
+            if (string.IsNullOrEmpty(propertyName) ||
+                !_currentErrors.ContainsKey(propertyName))
+                return null;
+
+            return _currentErrors[propertyName];
+        }
+
+        public bool HasErrors
+        {
+            get => _currentErrors.Count > 0;
+        }
+
+        #endregion
     }
 }

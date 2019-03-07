@@ -38,8 +38,8 @@ namespace RemoteAccessUtility
             set
             {
                 PropertyChanged.RaiseIfSet(() => Name, ref _name, value);
-
                 ValidateName();
+
                 PropertyChanged.Raise(() => CanSave);
             }
         }

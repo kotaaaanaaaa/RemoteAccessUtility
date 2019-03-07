@@ -93,7 +93,6 @@
       <DependentUpon>SettingDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="User.cs" />
-    <Compile Include="Validations\NotEmptyValidationRule.cs" />
     <Page Include="AccountEditDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

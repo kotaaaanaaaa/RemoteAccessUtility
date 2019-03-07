@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:system="clr-namespace:System;assembly=mscorlib" 
              xmlns:local="clr-namespace:RemoteAccessUtility"
-             xmlns:rule="clr-namespace:RemoteAccessUtility.Validations"
              xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" >
     <UserControl.Resources>
@@ -27,34 +26,17 @@
                           DisplayMemberPath="HostName"
                           Margin="0 8 0 8">
                 </ComboBox>
-                <TextBox x:Name="HostName"
-                         material:HintAssist.Hint="Name"
+                <TextBox material:HintAssist.Hint="Name"
+                         Text="{Binding HostName}"
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                          Margin="0 8 0 8">
-                    <TextBox.Text>
-                        <Binding Path="HostName"
-                                 UpdateSourceTrigger="PropertyChanged">
-                            <Binding.ValidationRules>
-                                <rule:NotEmptyValidationRule ValidatesOnTargetUpdated="True"/>
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox.Text>
                 </TextBox>
-                <TextBox x:Name="ConnectionAddress"
-                         material:HintAssist.Hint="IP Address / Host Name"
+                <TextBox material:HintAssist.Hint="IP Address / Host Name"
+                         Text="{Binding ConnectionAddress}"
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                          Margin="0 8 0 8">
-                    <TextBox.Text>
-                        <Binding Path="ConnectionAddress"
-                                 UpdateSourceTrigger="PropertyChanged">
-                            <Binding.ValidationRules>
-                                <rule:NotEmptyValidationRule ValidatesOnTargetUpdated="True"/>
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox.Text>
                 </TextBox>
-                <ComboBox x:Name="OperatingSystem"
-                          HorizontalAlignment="Left" 
+                <ComboBox HorizontalAlignment="Left" 
                           material:HintAssist.Hint="OS"
                           Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                           ItemsSource="{Binding Source={StaticResource OperatingSystemType}}"
@@ -66,21 +48,20 @@
             <StackPanel Width="235"
                         Margin="5 0 0 0">
                 <StackPanel Orientation="Horizontal">
-                    <Button x:Name="AddEnvironment"
-                        Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                        Click="AddEnvironment_Click"
-                        Height="24"
-                        Width="24"
-                        Margin="4 10 4 10">
-                        <material:PackIcon Kind="PlusCircleOutline" />
+                    <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                            IsEnabled="{Binding CanSave}"
+                            Click="AddEnvironment_Click"
+                            Height="24"
+                            Width="24"
+                            Margin="4 10 4 10">
+                            <material:PackIcon Kind="PlusCircleOutline" />
                     </Button>
-                    <Button x:Name="RemoveEnvironment"
-                        Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                        Click="RemoveEnvironment_Click"
-                        Height="24"
-                        Width="24"
-                        Margin="4 10 4 10">
-                        <material:PackIcon Kind="MinusCircleOutline" />
+                    <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                            Click="RemoveEnvironment_Click"
+                            Height="24"
+                            Width="24"
+                            Margin="4 10 4 10">
+                            <material:PackIcon Kind="MinusCircleOutline" />
                     </Button>
                 </StackPanel>
                 <ComboBox x:Name ="AccountsList"
@@ -95,7 +76,8 @@
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Right">
             <Button Content="Save"
-                    Style="{DynamicResource MaterialDesignFlatButton}"/>
+                    Style="{DynamicResource MaterialDesignFlatButton}"
+                    IsEnabled="{Binding CanSave}"/>
             <Button Content="Close"
                     Margin="0 0 0 0"
                     Style="{DynamicResource MaterialDesignFlatButton}"

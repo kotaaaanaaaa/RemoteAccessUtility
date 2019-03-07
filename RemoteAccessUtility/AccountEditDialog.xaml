@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:rule="clr-namespace:RemoteAccessUtility.Validations"
              xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" >
     <StackPanel Margin="16"
@@ -54,8 +53,8 @@
                     HorizontalAlignment="Right">
             <Button Content="Save"
                     Style="{DynamicResource MaterialDesignFlatButton}"
-                    Click="Save_Click"
-                    IsEnabled="{Binding CanSave}"/>
+                    IsEnabled="{Binding CanSave}"
+                    Click="Save_Click"/>
             <Button Content="Close"
                     IsDefault="True"
                     Style="{DynamicResource MaterialDesignFlatButton}"
