@@ -156,20 +156,22 @@ namespace RemoteAccessUtility
             textBox.Select(text.Length, 0);
         }
 
-        private void SaveAcount()
+        /// <summary>
+        /// ダイアログの内容を保存する
+        /// </summary>
+        private void Save_Click(object sender, RoutedEventArgs e)
         {
-            //var selectedItem = (Account)AccountsList.SelectedItem;
+            Accounts.Clear();
 
-            //if (ViewModel == null)
-            //    return;
-            //if (selectedItem == null)
-            //    return;
-
-            //if (!ViewModel.Equals(selectedItem))
-            //{
-            //    selectedItem.Name = ViewModel.Name;
-            //    selectedItem.Password = ViewModel.Password;
-            //}
+            foreach (var vm in AccountViewModels)
+            {
+                Accounts.Add(new Account()
+                {
+                    Name = vm.Name,
+                    Password = vm.Password,
+                    Guid = vm.Guid,
+                });
+            }
         }
     }
 }

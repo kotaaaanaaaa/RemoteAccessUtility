@@ -15,16 +15,15 @@
                       Margin="0 0 4 0"
                       Width="175">
             </ComboBox>
-            <Button x:Name="AddEnvironment"
-                    Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+            <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                    IsEnabled="{Binding CanSave}"
                     Click="AddAccount_Click"
                     Height="24"
                     Width="24"
                     Margin="4 10 4 10">
                 <material:PackIcon Kind="PlusCircleOutline" />
             </Button>
-            <Button x:Name="RemoveEnvironment"
-                    Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+            <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
                     Click="RemoveAccount_Click"
                     Height="24"
                     Width="24"
@@ -32,8 +31,7 @@
                 <material:PackIcon Kind="MinusCircleOutline" />
             </Button>
         </StackPanel>
-        <TextBox x:Name="AccountName"
-                 material:HintAssist.Hint="Name"
+        <TextBox material:HintAssist.Hint="Name"
                  Text="{Binding Name}"
                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                  Margin="0 8 0 8">
@@ -56,6 +54,7 @@
                     HorizontalAlignment="Right">
             <Button Content="Save"
                     Style="{DynamicResource MaterialDesignFlatButton}"
+                    Click="Save_Click"
                     IsEnabled="{Binding CanSave}"/>
             <Button Content="Close"
                     IsDefault="True"

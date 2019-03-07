@@ -24,6 +24,7 @@ namespace RemoteAccessUtility
             Name = account.Name;
             Password = account.Password;
             Confirm = account.Password;
+            Guid = account.Guid;
             DisplayPassword = "".PadLeft(Password.Length, maskChar);
             DisplayConfirm = "".PadLeft(Confirm.Length, maskChar);
         }
@@ -112,15 +113,7 @@ namespace RemoteAccessUtility
         }
         private string _displayConfirm;
 
-        public bool Equals(Account account)
-        {
-            if (Name != account.Name)
-                return false;
-            if (Password != account.Password)
-                return false;
-
-            return true;
-        }
+        public string Guid;
 
         /// <summary>
         /// 保存可否を取得する
