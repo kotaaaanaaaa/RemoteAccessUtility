@@ -33,6 +33,7 @@
         <TextBox material:HintAssist.Hint="Name"
                  Text="{Binding Name}"
                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                 TextChanged="Name_OnTextChanged"
                  Margin="0 8 0 8">
         </TextBox>
         <TextBox x:Name="Password"

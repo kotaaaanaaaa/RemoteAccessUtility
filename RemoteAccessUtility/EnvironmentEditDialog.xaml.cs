@@ -60,5 +60,19 @@ namespace RemoteAccessUtility
             var viewModel = (EnvironmentEditDialogViewModel)EnvironmentsList.SelectedItem;
             viewModel.AccountGuid = selectedItem.Guid;
         }
+
+        private async void HostName_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            var selectedItem = (EnvironmentEditDialogViewModel)DataContext;
+            selectedItem.ValidateHostName(textBox.Text);
+        }
+
+        private async void ConnectionAddress_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            var selectedItem = (EnvironmentEditDialogViewModel)DataContext;
+            selectedItem.ValidateConnectionAddress(textBox.Text);
+        }
     }
 }

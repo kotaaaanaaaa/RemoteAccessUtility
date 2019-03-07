@@ -14,7 +14,6 @@ namespace RemoteAccessUtility
         {
             ValidateHostName();
             ValidateConnectionAddress();
-            PropertyChanged.Raise(() => CanSave);
         }
         public EnvironmentEditDialogViewModel(Environment env) : this()
         {
@@ -35,7 +34,6 @@ namespace RemoteAccessUtility
                 PropertyChanged.RaiseIfSet(() => HostName, ref _hostName, value);
                 ValidateHostName();
 
-                PropertyChanged.Raise(() => CanSave);
             }
         }
         private string _hostName;
@@ -50,8 +48,6 @@ namespace RemoteAccessUtility
             {
                 PropertyChanged.RaiseIfSet(() => ConnectionAddress, ref _connectionAddress, value);
                 ValidateConnectionAddress();
-
-                PropertyChanged.Raise(() => CanSave);
             }
         }
         private string _connectionAddress;
@@ -94,9 +90,10 @@ namespace RemoteAccessUtility
         /// <summary>
         /// ホスト名を検証する
         /// </summary>
-        private void ValidateHostName()
+        public void ValidateHostName(string hostName = null)
         {
-            if (string.IsNullOrWhiteSpace(HostName))
+            var value = hostName ?? HostName;
+            if (string.IsNullOrWhiteSpace(value))
             {
                 AddError(() => HostName, "Fiels is required.");
             }
@@ -104,14 +101,16 @@ namespace RemoteAccessUtility
             {
                 RemoveError(() => HostName);
             }
+            PropertyChanged.Raise(() => CanSave);
         }
 
         /// <summary>
         /// RDP接続先アドレスを検証する
         /// </summary>
-        private void ValidateConnectionAddress()
+        public void ValidateConnectionAddress(string connectionAddress = null)
         {
-            if (string.IsNullOrWhiteSpace(ConnectionAddress))
+            var value = connectionAddress ?? ConnectionAddress;
+            if (string.IsNullOrWhiteSpace(value))
             {
                 AddError(() => ConnectionAddress, "Fiels is required.");
             }
@@ -119,6 +118,7 @@ namespace RemoteAccessUtility
             {
                 RemoveError(() => ConnectionAddress);
             }
+            PropertyChanged.Raise(() => CanSave);
         }
 
         readonly Dictionary<string, List<string>> _currentErrors = new Dictionary<string, List<string>>();

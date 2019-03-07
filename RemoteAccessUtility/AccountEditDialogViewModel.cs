@@ -16,7 +16,6 @@ namespace RemoteAccessUtility
         {
             ValidateName();
             ValidatePassword();
-            PropertyChanged.Raise(() => CanSave);
         }
 
         public AccountEditDialogViewModel(Account account, char maskChar) : this()
@@ -39,8 +38,6 @@ namespace RemoteAccessUtility
             {
                 PropertyChanged.RaiseIfSet(() => Name, ref _name, value);
                 ValidateName();
-
-                PropertyChanged.Raise(() => CanSave);
             }
         }
         private string _name;
@@ -60,8 +57,6 @@ namespace RemoteAccessUtility
 
                 ValidatePassword();
                 PropertyChanged.Raise(() => Password);
-
-                PropertyChanged.Raise(() => CanSave);
             }
         }
         private SecureString _password;
@@ -81,8 +76,6 @@ namespace RemoteAccessUtility
 
                 ValidatePassword();
                 PropertyChanged.Raise(() => Confirm);
-
-                PropertyChanged.Raise(() => CanSave);
             }
         }
         private SecureString _confirm;
@@ -128,9 +121,10 @@ namespace RemoteAccessUtility
         /// <summary>
         /// ユーザー名を検証する
         /// </summary>
-        private void ValidateName()
+        public void ValidateName(string name = null)
         {
-            if (string.IsNullOrWhiteSpace(Name))
+            var value = name ?? Name;
+            if (string.IsNullOrWhiteSpace(value))
             {
                 AddError(() => Name, "Fiels is required.");
             }
@@ -138,6 +132,7 @@ namespace RemoteAccessUtility
             {
                 RemoveError(() => Name);
             }
+            PropertyChanged.Raise(() => CanSave);
         }
 
         /// <summary>
@@ -145,7 +140,7 @@ namespace RemoteAccessUtility
         /// </summary>
         private void ValidatePassword()
         {
-            if (Confirm == Password)
+            if (Password == Confirm)
             {
                 RemoveError(() => DisplayConfirm);
             }
@@ -153,6 +148,7 @@ namespace RemoteAccessUtility
             {
                 AddError(() => DisplayConfirm, "Confirm password must be same.");
             }
+            PropertyChanged.Raise(() => CanSave);
         }
 
         readonly Dictionary<string, List<string>> _currentErrors = new Dictionary<string, List<string>>();

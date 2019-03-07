@@ -29,11 +29,13 @@
                 <TextBox material:HintAssist.Hint="Name"
                          Text="{Binding HostName}"
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         TextChanged="HostName_OnTextChanged"
                          Margin="0 8 0 8">
                 </TextBox>
                 <TextBox material:HintAssist.Hint="IP Address / Host Name"
                          Text="{Binding ConnectionAddress}"
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         TextChanged="ConnectionAddress_OnTextChanged"
                          Margin="0 8 0 8">
                 </TextBox>
                 <ComboBox HorizontalAlignment="Left" 

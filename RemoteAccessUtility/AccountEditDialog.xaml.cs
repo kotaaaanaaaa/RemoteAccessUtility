@@ -58,6 +58,13 @@ namespace RemoteAccessUtility
             AccountViewModels.Remove(selectedItem);
         }
 
+        private async void Name_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            var selectedItem = (AccountEditDialogViewModel)DataContext;
+            selectedItem.ValidateName(textBox.Text);
+        }
+
         private async void Password_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             var textBox = (TextBox)sender;
