@@ -36,7 +36,13 @@ namespace RemoteAccessUtility
 
             var account = Accounts.Where(x => x.Guid == selectedItem.AccountGuid);
             if (account.Any())
+            {
                 AccountsList.SelectedItem = account.First();
+            }
+            else
+            {
+                AccountsList.SelectedIndex = -1;
+            }
         }
 
         private async void AddEnvironment_Click(object sender, RoutedEventArgs e)
@@ -60,6 +66,7 @@ namespace RemoteAccessUtility
         {
             var selectedItem = (Account)AccountsList.SelectedItem;
             var viewModel = (EnvironmentEditDialogViewModel)EnvironmentsList.SelectedItem;
+            if (selectedItem == null) return;
             viewModel.AccountGuid = selectedItem.Guid;
         }
 
