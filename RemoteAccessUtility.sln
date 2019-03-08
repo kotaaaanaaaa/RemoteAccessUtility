@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteAccessUtility", "Remo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CoreUtilitiesPack", "CoreUtilitiesPack", "{AC227C5A-8E1E-48EB-9905-686CFB38BBFD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreUtilitiesPack.SqliteAccessor", "..\CoreUtilitiesPack\CoreUtilitiesPack.SqliteAccessor\CoreUtilitiesPack.SqliteAccessor.csproj", "{77F5BF73-30FF-4689-B750-17FF149B07D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreUtilitiesPack.SqliteAccessor", "CoreUtilitiesPack\CoreUtilitiesPack.SqliteAccessor\CoreUtilitiesPack.SqliteAccessor.csproj", "{77F5BF73-30FF-4689-B750-17FF149B07D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

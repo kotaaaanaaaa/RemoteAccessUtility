@@ -156,7 +156,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CoreUtilitiesPack\CoreUtilitiesPack.SqliteAccessor\CoreUtilitiesPack.SqliteAccessor.csproj">
+    <ProjectReference Include="..\CoreUtilitiesPack\CoreUtilitiesPack.SqliteAccessor\CoreUtilitiesPack.SqliteAccessor.csproj">
       <Project>{77f5bf73-30ff-4689-b750-17ff149b07d9}</Project>
       <Name>CoreUtilitiesPack.SqliteAccessor</Name>
     </ProjectReference>
