@@ -3,6 +3,7 @@ using MaterialDesignThemes.Wpf;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using RemoteAccessUtility.Icons;
 
 namespace RemoteAccessUtility
 {
@@ -81,16 +82,53 @@ namespace RemoteAccessUtility
             return records;
         }
 
+        private void UpdatetAccounts(List<Account> accounts)
+        {
+            var target = SelectAccounts();
+            foreach (var account in accounts)
+            {
+                if (target.Contains(account))
+                {
+                    target.Remove(account);
+                }
+            }
+            db.ToDictionaries(target, out var deletes);
+            db.Delete("account", deletes);
+
+            db.ToDictionaries(accounts, out var upserts);
+            db.Upserts("account", upserts);
+        }
+
+        private void UpdatetEnvironments(List<Environment> environments)
+        {
+            var target = SelectEnvironments();
+            foreach (var environment in environments)
+            {
+                if (target.Contains(environment))
+                {
+                    target.Remove(environment);
+                }
+            }
+            db.ToDictionaries(target, out var deletes);
+            db.Delete("environment", deletes);
+
+            db.ToDictionaries(environments, out var upserts);
+            db.Upserts("environment", upserts);
+        }
+
+
         private async void EnvironmentEdit_Click(object sender, RoutedEventArgs e)
         {
             var dialogView = new EnvironmentEditDialog(Environments, Accounts);
             var result = await dialogHost.ShowDialog(dialogView);
+            UpdatetEnvironments(Environments);
         }
 
         private async void AccountEdit_Click(object sender, RoutedEventArgs e)
         {
             var dialogView = new AccountEditDialog(Accounts);
             var result = await dialogHost.ShowDialog(dialogView);
+            UpdatetAccounts(Accounts);
         }
 
         private async void Setting_Click(object sender, RoutedEventArgs e)

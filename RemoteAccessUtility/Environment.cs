@@ -4,23 +4,21 @@ using System.Windows.Input;
 
 namespace RemoteAccessUtility
 {
-    public class Environment : INotifyPropertyChanged
+    public class Environment
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public ICommand Connect { get; set; } = new ConnectCommand();
         public ICommand Delete { get; set; } = new ConnectCommand();
 
         /// <summary>
         /// ホスト名(表示用)
         /// </summary>
-        [Record(Name = "hostName", Type = RecordAttribute.FieldType.TEXT)]
+        [Record(Name = "hostName", Type = RecordAttribute.FieldType.TEXT, Primary = true)]
         public string HostName { get; set; }
 
         /// <summary>
         /// RDC接続先アドレス
         /// </summary>
-        [Record(Name = "connectionAddress", Type = RecordAttribute.FieldType.TEXT)]
+        [Record(Name = "connectionAddress", Type = RecordAttribute.FieldType.TEXT, Primary = true)]
         public string ConnectionAddress { get; set; }
 
         /// <summary>
@@ -37,7 +35,7 @@ namespace RemoteAccessUtility
         /// <summary>
         /// アカウントのGuid
         /// </summary>
-        [Record(Name = "accountGUid", Type = RecordAttribute.FieldType.TEXT)]
+        [Record(Name = "accountGuid", Type = RecordAttribute.FieldType.TEXT)]
         public string AccountGuid { get; set; }
     }
 

@@ -79,7 +79,8 @@
                     HorizontalAlignment="Right">
             <Button Content="Save"
                     Style="{DynamicResource MaterialDesignFlatButton}"
-                    IsEnabled="{Binding CanSave}"/>
+                    IsEnabled="{Binding CanSave}"
+                    Click="Save_Click"/>
             <Button Content="Close"
                     Margin="0 0 0 0"
                     Style="{DynamicResource MaterialDesignFlatButton}"

@@ -30,7 +30,7 @@ namespace RemoteAccessUtility
         /// <summary>
         /// GUID
         /// </summary>
-        [Record(Name = "guid", Type = RecordAttribute.FieldType.TEXT)]
+        [Record(Name = "guid", Type = RecordAttribute.FieldType.TEXT, Primary = true)]
         public string Guid
         {
             get => _guid ?? System.Guid.NewGuid().ToString();

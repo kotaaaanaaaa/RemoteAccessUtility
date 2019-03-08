@@ -32,6 +32,7 @@ namespace RemoteAccessUtility
         {
             var selectedItem = (EnvironmentEditDialogViewModel)EnvironmentsList.SelectedItem;
             DataContext = selectedItem;
+            if (selectedItem == null) return;
 
             var account = Accounts.Where(x => x.Guid == selectedItem.AccountGuid);
             if (account.Any())
@@ -50,8 +51,9 @@ namespace RemoteAccessUtility
             if (EnvironmentViewModels.Count <= 1) return;
             var selectedItem = (EnvironmentEditDialogViewModel)EnvironmentsList.SelectedItem;
             if (selectedItem == null) return;
-            EnvironmentsList.SelectedIndex = 0;
+            EnvironmentsList.SelectedIndex = -1;
             EnvironmentViewModels.Remove(selectedItem);
+            EnvironmentsList.SelectedIndex = 0;
         }
 
         private async void AccountsList_SelectionChanged(object sender, RoutedEventArgs e)
@@ -65,6 +67,7 @@ namespace RemoteAccessUtility
         {
             var textBox = (TextBox)sender;
             var selectedItem = (EnvironmentEditDialogViewModel)DataContext;
+            if (selectedItem == null) return;
             selectedItem.ValidateHostName(textBox.Text);
         }
 
@@ -72,7 +75,27 @@ namespace RemoteAccessUtility
         {
             var textBox = (TextBox)sender;
             var selectedItem = (EnvironmentEditDialogViewModel)DataContext;
+            if (selectedItem == null) return;
             selectedItem.ValidateConnectionAddress(textBox.Text);
+        }
+
+        /// <summary>
+        /// ダイアログの内容を保存する
+        /// </summary>
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            Environments.Clear();
+
+            foreach (var vm in EnvironmentViewModels)
+            {
+                Environments.Add(new Environment()
+                {
+                    HostName = vm.HostName,
+                    ConnectionAddress = vm.ConnectionAddress,
+                    OsType = vm.OsType,
+                    AccountGuid = vm.AccountGuid,
+                });
+            }
         }
     }
 }
