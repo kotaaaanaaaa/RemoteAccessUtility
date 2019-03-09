@@ -23,7 +23,15 @@ namespace RemoteAccessUtility
 
             InitializeDb();
             SelectAccounts().ForEach(x => Accounts.Add(x));
-            SelectEnvironments().ForEach(x => Environments.Add(x));
+            SelectEnvironments().ForEach(env =>
+            {
+                var account = Accounts.Where(x => x.Guid == env.AccountGuid);
+                if (account.Any())
+                {
+                    env.Account = account.First();
+                }
+                Environments.Add(env);
+            });
         }
         private void InitializeDb()
         {

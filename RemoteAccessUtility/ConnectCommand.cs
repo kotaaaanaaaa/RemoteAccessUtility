@@ -18,8 +18,11 @@ namespace RemoteAccessUtility
         {
             var rdpFilename = "RemoteAccessUtility.rdp";
 
+            var environment = (Environment)parameter;
             var option = new RdpOption();
-            option.General.FullAddress = ((Environment)parameter).ConnectionAddress;
+            option.General.FullAddress = environment.ConnectionAddress;
+            option.General.Username = environment.Account.Name;
+            option.General.Password = environment.Account.Password;
             option.Write(rdpFilename);
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, rdpFilename);
             Process.Start("mstsc", path);

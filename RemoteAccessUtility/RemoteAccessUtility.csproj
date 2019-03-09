@@ -65,6 +65,7 @@
     </Compile>
     <Compile Include="AccountEditDialogViewModel.cs" />
     <Compile Include="ConnectCommand.cs" />
+    <Compile Include="dpApi.cs" />
     <Compile Include="Environment.cs" />
     <Compile Include="EnvironmentEditDialog.xaml.cs">
       <DependentUpon>EnvironmentEditDialog.xaml</DependentUpon>

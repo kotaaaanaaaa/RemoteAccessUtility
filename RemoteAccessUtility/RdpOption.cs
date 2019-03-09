@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -66,6 +67,25 @@ namespace RemoteAccessUtility
             var val = _options[key + ":s:"];
             value = (string)val;
         }
+
+        protected void Set(string key, byte[] value)
+        {
+            var val = BitConverter.ToString(value).Replace("-", "");
+            if (_options.ContainsKey(key + ":b:"))
+                _options.Remove(key + ":b:");
+            _options.Add(key + ":b:", val);
+        }
+
+        protected void Get(string key, out byte[] value)
+        {
+            var val = (string)(_options[key + ":b:"]);
+            var bs = new List<byte>();
+            for (int i = 0; i < val.Length - 1; i += 2)
+            {
+                bs.Add(Convert.ToByte(val.Substring(i, 2), 16));
+            }
+            value = bs.ToArray();
+        }
     }
 
     public class GeneralOption : RdpOptionBase
@@ -114,6 +134,20 @@ namespace RemoteAccessUtility
                 return val;
             }
             set => Set("username", value);
+        }
+
+        public string Password
+        {
+            get
+            {
+                Get("password 51", out byte[] val);
+                return dpApi.Decrypt(val);
+            }
+            set
+            {
+                var password = dpApi.Encrypt(value);
+                Set("password 51", password);
+            }
         }
     }
 

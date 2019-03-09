@@ -80,7 +80,6 @@
                                      HorizontalAlignment="Right"
                                      VerticalAlignment="Bottom"
                                      ToolTip="Options"
-                                     Grid.Row="1"
                                      Margin="0 0 10 10">
                 <StackPanel Orientation="Horizontal">
                     <Button x:Name="EnvironmentEdit"

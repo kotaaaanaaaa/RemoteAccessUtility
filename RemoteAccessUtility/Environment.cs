@@ -37,6 +37,11 @@ namespace RemoteAccessUtility
         /// </summary>
         [Record(Name = "accountGuid", Type = RecordAttribute.FieldType.TEXT)]
         public string AccountGuid { get; set; }
+
+        /// <summary>
+        /// アカウント
+        /// </summary>
+        public Account Account { get; set; }
     }
 
     public enum OperatingSystemType
