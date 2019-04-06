@@ -141,11 +141,11 @@ namespace RemoteAccessUtility
             get
             {
                 Get("password 51", out byte[] val);
-                return dpApi.Decrypt(val);
+                return DpApiAccessor.Decrypt(val);
             }
             set
             {
-                var password = dpApi.Encrypt(value);
+                var password = DpApiAccessor.Encrypt(DpApiAccessor.KeyType.MachineKey, value, string.Empty, "psw"); 
                 Set("password 51", password);
             }
         }

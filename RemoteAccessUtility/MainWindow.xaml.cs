@@ -1,6 +1,7 @@
 ﻿using CoreUtilitiesPack;
 using MaterialDesignThemes.Wpf;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using RemoteAccessUtility.Icons;
@@ -12,8 +13,8 @@ namespace RemoteAccessUtility
     /// </summary>
     public partial class MainWindow : Window
     {
-        public List<Environment> Environments = new List<Environment>();
-        public List<Account> Accounts = new List<Account>();
+        public ObservableCollection<Environment> Environments = new ObservableCollection<Environment>();
+        public ObservableCollection<Account> Accounts = new ObservableCollection<Account>();
         private static SqliteAccessor db = new SqliteAccessor();
 
         public MainWindow()
@@ -129,14 +130,14 @@ namespace RemoteAccessUtility
         {
             var dialogView = new EnvironmentEditDialog(Environments, Accounts);
             var result = await dialogHost.ShowDialog(dialogView);
-            UpdatetEnvironments(Environments);
+            UpdatetEnvironments(Environments.ToList());
         }
 
         private async void AccountEdit_Click(object sender, RoutedEventArgs e)
         {
             var dialogView = new AccountEditDialog(Accounts);
             var result = await dialogHost.ShowDialog(dialogView);
-            UpdatetAccounts(Accounts);
+            UpdatetAccounts(Accounts.ToList());
         }
 
         private async void Setting_Click(object sender, RoutedEventArgs e)

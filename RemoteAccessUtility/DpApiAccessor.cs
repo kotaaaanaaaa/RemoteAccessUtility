@@ -1,81 +1,75 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace RemoteAccessUtility
 {
-    class dpApi
+    public static class DpApiAccessor
     {
-        [DllImport("crypt32.dll", SetLastError = true, CharSet = System.Runtime.InteropServices.CharSet.Auto)]
+        [DllImport("crypt32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         private static extern bool CryptProtectData(
-            ref DATA_BLOB pPlainText,
-            string szDescription,
-            ref DATA_BLOB pEntropy,
-            IntPtr pReserved,
-            ref CRYPTPROTECT_PROMPTSTRUCT pPrompt,
+            DATA_BLOB pDataIn,
+            string szDataDescr,
+            DATA_BLOB pOptionalEntropy,
+            IntPtr pvReserved,
+            CRYPTPROTECT_PROMPTSTRUCT pPromptStruct,
             int dwFlags,
-            ref DATA_BLOB pCipherText);
+            DATA_BLOB pDataOut);
 
-        [DllImport("crypt32.dll", SetLastError = true, CharSet = System.Runtime.InteropServices.CharSet.Auto)]
+        [DllImport("crypt32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         private static extern bool CryptUnprotectData(
-            ref DATA_BLOB pCipherText,
-            ref string pszDescription,
-            ref DATA_BLOB pEntropy,
-            IntPtr pReserved,
-            ref CRYPTPROTECT_PROMPTSTRUCT pPrompt,
-            int dwFlags,
-            ref DATA_BLOB pPlainText);
+            DATA_BLOB pDataIn,
+            ref string ppszDataDescr,
+            DATA_BLOB pOptionalEntropy,
+            IntPtr pvReserved,
+            CRYPTPROTECT_PROMPTSTRUCT pPromptStruct,
+            int dwFlags, DATA_BLOB pDataOut);
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        internal struct DATA_BLOB
+        private class DATA_BLOB
         {
             public int cbData;
             public IntPtr pbData;
+
+            public DATA_BLOB() { }
+            public DATA_BLOB(byte[] data)
+            {
+                if (data == null)
+                    data = new byte[0];
+
+                pbData = Marshal.AllocHGlobal(data.Length);
+
+                if (pbData == IntPtr.Zero)
+                    throw new Exception("Unable to allocate data buffer for BLOB structure.");
+
+                cbData = data.Length;
+
+                Marshal.Copy(data, 0, pbData, data.Length);
+            }
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        internal struct CRYPTPROTECT_PROMPTSTRUCT
+        private class CRYPTPROTECT_PROMPTSTRUCT
         {
             public int cbSize;
             public int dwPromptFlags;
             public IntPtr hwndApp;
             public string szPrompt;
-        }
 
-        static private IntPtr NullPtr = ((IntPtr)((int)(0)));
+            public CRYPTPROTECT_PROMPTSTRUCT()
+            {
+                cbSize = Marshal.SizeOf(typeof(CRYPTPROTECT_PROMPTSTRUCT));
+                dwPromptFlags = 0;
+                hwndApp = IntPtr.Zero;
+                szPrompt = null;
+            }
+        }
 
         private const int CRYPTPROTECT_UI_FORBIDDEN = 0x1;
         private const int CRYPTPROTECT_LOCAL_MACHINE = 0x4;
 
-        private static void InitPrompt(ref CRYPTPROTECT_PROMPTSTRUCT ps)
-        {
-            ps.cbSize = Marshal.SizeOf(typeof(CRYPTPROTECT_PROMPTSTRUCT));
-            ps.dwPromptFlags = 0;
-            ps.hwndApp = NullPtr;
-            ps.szPrompt = null;
-        }
-
-        private static void InitBLOB(byte[] data, ref DATA_BLOB blob)
-        {
-            if (data == null)
-                data = new byte[0];
-
-            blob.pbData = Marshal.AllocHGlobal(data.Length);
-
-            if (blob.pbData == IntPtr.Zero)
-                throw new Exception("Unable to allocate data buffer for BLOB structure.");
-
-            blob.cbData = data.Length;
-
-            Marshal.Copy(data, 0, blob.pbData, data.Length);
-        }
-
         public enum KeyType { UserKey = 1, MachineKey };
-
         private static KeyType defaultKeyType = KeyType.UserKey;
 
         public static byte[] Encrypt(string plainText)
@@ -95,44 +89,25 @@ namespace RemoteAccessUtility
 
         public static byte[] Encrypt(KeyType keyType, string plainText, string entropy, string description)
         {
-            return Encrypt(keyType, Encoding.UTF8.GetBytes(plainText), Encoding.UTF8.GetBytes(entropy), description);
+            return Encrypt(keyType, Encoding.Unicode.GetBytes(plainText), Encoding.Unicode.GetBytes(entropy), description);
         }
 
         public static byte[] Encrypt(KeyType keyType, byte[] plainTextBytes, byte[] entropyBytes, string description)
         {
-            DATA_BLOB plainTextBlob = new DATA_BLOB();
+            DATA_BLOB plainTextBlob = new DATA_BLOB(plainTextBytes);
             DATA_BLOB cipherTextBlob = new DATA_BLOB();
-            DATA_BLOB entropyBlob = new DATA_BLOB();
+            DATA_BLOB entropyBlob = new DATA_BLOB(entropyBytes);
 
             CRYPTPROTECT_PROMPTSTRUCT prompt = new CRYPTPROTECT_PROMPTSTRUCT();
-            InitPrompt(ref prompt);
 
             try
             {
-                try
-                {
-                    InitBLOB(plainTextBytes, ref plainTextBlob);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Cannot initialize plaintext BLOB.", e);
-                }
-
-                try
-                {
-                    InitBLOB(entropyBytes, ref entropyBlob);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Cannot initialize entropy BLOB.", e);
-                }
-
                 int flags = CRYPTPROTECT_UI_FORBIDDEN;
 
                 if (keyType == KeyType.MachineKey)
                     flags |= CRYPTPROTECT_LOCAL_MACHINE;
 
-                bool success = CryptProtectData(ref plainTextBlob, description, ref entropyBlob, IntPtr.Zero, ref prompt, flags, ref cipherTextBlob);
+                bool success = CryptProtectData(plainTextBlob, description, entropyBlob, IntPtr.Zero, prompt, flags, cipherTextBlob);
 
                 if (!success)
                 {
@@ -176,43 +151,24 @@ namespace RemoteAccessUtility
 
         public static string Decrypt(byte[] cipherTextBytes, string entropy, out string description)
         {
-            return Convert.ToBase64String(Decrypt(cipherTextBytes, Encoding.UTF8.GetBytes(entropy), out description));
+            return Encoding.Unicode.GetString(Decrypt(cipherTextBytes, Encoding.Unicode.GetBytes(entropy), out description));
         }
 
         public static byte[] Decrypt(byte[] cipherTextBytes, byte[] entropyBytes, out string description)
         {
             DATA_BLOB plainTextBlob = new DATA_BLOB();
-            DATA_BLOB cipherTextBlob = new DATA_BLOB();
-            DATA_BLOB entropyBlob = new DATA_BLOB();
+            DATA_BLOB cipherTextBlob = new DATA_BLOB(cipherTextBytes);
+            DATA_BLOB entropyBlob = new DATA_BLOB(entropyBytes);
 
             CRYPTPROTECT_PROMPTSTRUCT prompt = new CRYPTPROTECT_PROMPTSTRUCT();
-            InitPrompt(ref prompt);
 
             description = String.Empty;
 
             try
             {
-                try
-                {
-                    InitBLOB(cipherTextBytes, ref cipherTextBlob);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Cannot initialize ciphertext BLOB.", e);
-                }
-
-                try
-                {
-                    InitBLOB(entropyBytes, ref entropyBlob);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Cannot initialize entropy BLOB.", e);
-                }
-
                 int flags = CRYPTPROTECT_UI_FORBIDDEN;
 
-                bool success = CryptUnprotectData(ref cipherTextBlob, ref description, ref entropyBlob, IntPtr.Zero, ref prompt, flags, ref plainTextBlob);
+                bool success = CryptUnprotectData(cipherTextBlob, ref description, entropyBlob, IntPtr.Zero, prompt, flags, plainTextBlob);
 
                 if (!success)
                 {

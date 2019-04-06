@@ -12,14 +12,14 @@ namespace RemoteAccessUtility
     public partial class EnvironmentEditDialog : UserControl
     {
         public ObservableCollection<EnvironmentEditDialogViewModel> EnvironmentViewModels;
-        private List<Environment> Environments;
+        private ObservableCollection<Environment> Environments;
         private IEnumerable<Account> Accounts;
 
-        public EnvironmentEditDialog(List<Environment> environments, IEnumerable<Account> accounts)
+        public EnvironmentEditDialog(ObservableCollection<Environment> environments, IEnumerable<Account> accounts)
         {
             Environments = environments;
             EnvironmentViewModels = new ObservableCollection<EnvironmentEditDialogViewModel>();
-            Environments.ForEach(x => { EnvironmentViewModels.Add(new EnvironmentEditDialogViewModel(x)); });
+            Environments.ToList().ForEach(x => { EnvironmentViewModels.Add(new EnvironmentEditDialogViewModel(x)); });
             Accounts = accounts;
 
             InitializeComponent();
@@ -101,6 +101,7 @@ namespace RemoteAccessUtility
                     ConnectionAddress = vm.ConnectionAddress,
                     OsType = vm.OsType,
                     AccountGuid = vm.AccountGuid,
+                    Account = Accounts.First(x=>vm.AccountGuid.Equals(x.Guid)),
                 });
             }
         }

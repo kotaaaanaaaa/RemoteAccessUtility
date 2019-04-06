@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,18 +16,18 @@ namespace RemoteAccessUtility
     public partial class AccountEditDialog : UserControl
     {
         public ObservableCollection<AccountEditDialogViewModel> AccountViewModels;
-        public List<Account> Accounts;
+        public ObservableCollection<Account> Accounts;
         private readonly char MaskChar = '●';
         private Guid PasswordEncryptGuid;
         private bool OnPasswordChanging = false;
         private Guid ConfirmEncryptGuid;
         private bool OnConfirmChanging = false;
 
-        public AccountEditDialog(List<Account> accounts)
+        public AccountEditDialog(ObservableCollection<Account> accounts)
         {
             Accounts = accounts;
             AccountViewModels = new ObservableCollection<AccountEditDialogViewModel>();
-            Accounts.ForEach(x => { AccountViewModels.Add(new AccountEditDialogViewModel(x, MaskChar)); });
+            Accounts.ToList().ForEach(x => { AccountViewModels.Add(new AccountEditDialogViewModel(x, MaskChar)); });
 
             InitializeComponent();
             AccountsList.ItemsSource = AccountViewModels;
