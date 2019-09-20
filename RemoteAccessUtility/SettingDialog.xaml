@@ -6,18 +6,170 @@
              xmlns:local="clr-namespace:RemoteAccessUtility"
              xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" >
+    <UserControl.Resources>
+        <ObjectDataProvider x:Key="ScreenMode"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type local:ScreenMode}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:ScreenMode"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="BitPerPixel"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type local:BitPerPixel}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:BitPerPixel"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="AudioPlayMode"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type local:AudioPlayMode}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:AudioPlayMode"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="AudioCapture"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type local:AudioCapture}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:AudioCapture"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="KeyboardHookMode"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type local:KeyboardHookMode}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:KeyboardHookMode"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="ConnectionTypeConst"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type local:ConnectionTypeConst}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:ConnectionTypeConst"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="AuthenticationLevel"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type local:AuthenticationLevel}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:AuthenticationLevel"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
     <StackPanel Margin="16">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Margin="0 0 5 0">
+                <TextBlock Text="Display"/>
+                <ComboBox Height="40"
+                          HorizontalAlignment="Left" 
+                          material:HintAssist.Hint="Screen Mode"
+                          Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                          ItemsSource="{Binding Source={StaticResource ScreenMode}}"
+                          SelectedItem="{Binding Path=Display.ScreenModeID}">
+                </ComboBox>
+                <TextBox Height="40"
+                         material:HintAssist.Hint="Desktop With"
+                         Text="{Binding Display.DesktopWidth}"
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                </TextBox>
+                <TextBox Height="40"
+                         material:HintAssist.Hint="Desktop Hight"
+                         Text="{Binding Display.DesktopHeight}"
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                </TextBox>
+                <ComboBox Height="40"
+                          HorizontalAlignment="Left" 
+                          material:HintAssist.Hint="Color Depth"
+                          Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                          ItemsSource="{Binding Source={StaticResource BitPerPixel}}"
+                          SelectedItem="{Binding Path=Display.SessionBitPerPixel}"
+                          Margin="0 5 0 5">
+                </ComboBox>
+                <CheckBox Height="20"
+                          IsChecked="{Binding Display.UseMultimon}"
+                          Margin="0 5 0 5">
+                    Use Multi Monitor
+                </CheckBox>
+                <CheckBox Height="20"
+                          IsChecked="{Binding Display.SmartSizing}"
+                          Margin="0 5 0 5">
+                    Use Smart Sizing
+                </CheckBox>
+                <CheckBox Height="20"
+                          IsChecked="{Binding Display.DisplayConnectionBar}"
+                          Margin="0 5 0 5">
+                    Show Connection Bar
+                </CheckBox>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Margin="5 0 5 0">
+                <TextBlock Text="Resources"/>
+                <ComboBox Height="40"
+                          HorizontalAlignment="Left" 
+                          material:HintAssist.Hint="Audio Play Mode"
+                          Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                          ItemsSource="{Binding Source={StaticResource AudioPlayMode}}">
+                </ComboBox>
+                <ComboBox Height="40"
+                          HorizontalAlignment="Left" 
+                          material:HintAssist.Hint="Audio Capture"
+                          Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                          ItemsSource="{Binding Source={StaticResource AudioCapture}}">
+                </ComboBox>
+                <ComboBox Height="40"
+                          HorizontalAlignment="Left" 
+                          material:HintAssist.Hint="Keyboard Hook Mode"
+                          Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                          ItemsSource="{Binding Source={StaticResource KeyboardHookMode}}">
+                </ComboBox>
+                <CheckBox Height="20"
+                          IsChecked="{Binding LocalResource.RedirectClipboard}"
+                          Margin="0 5 0 5">
+                    Use Clipboard Redirect
+                </CheckBox>
+                <CheckBox Height="20"
+                          IsChecked="{Binding LocalResource.RedirectPrinters}"
+                          Margin="0 5 0 5">
+                    Use Printers Redirect
+                </CheckBox>
+            </StackPanel>
+                <StackPanel Grid.Column="2" Margin="5 0 0 0">
+                <TextBlock Text="Other"/>
+                <TextBox Height="40"
+                         material:HintAssist.Hint="Server Port"
+                         Text="{Binding Port}"
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                </TextBox>
+                <ComboBox Height="40"
+                          HorizontalAlignment="Left" 
+                          material:HintAssist.Hint="Authentication Level"
+                          Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                          ItemsSource="{Binding Source={StaticResource AuthenticationLevel}}">
+                </ComboBox>
+                <ComboBox Height="40"
+                          HorizontalAlignment="Left" 
+                          material:HintAssist.Hint="Connection Type"
+                          Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                          ItemsSource="{Binding Source={StaticResource ConnectionTypeConst}}">
+                </ComboBox>
+            </StackPanel>
+        </Grid>
         <StackPanel
             Orientation="Horizontal"
             HorizontalAlignment="Right">
             <Button Content="Accept"
-                IsDefault="True"
-                Style="{DynamicResource MaterialDesignFlatButton}"
-                Command="{x:Static material:DialogHost.CloseDialogCommand}"/>
+                    IsDefault="True"
+                    Style="{DynamicResource MaterialDesignFlatButton}"
+                    Command="{x:Static material:DialogHost.CloseDialogCommand}"/>
             <Button Content="Close"
-                IsCancel="True"
-                Style="{DynamicResource MaterialDesignFlatButton}"
-                Command="{x:Static material:DialogHost.CloseDialogCommand}"/>
+                    IsCancel="True"
+                    Style="{DynamicResource MaterialDesignFlatButton}"
+                    Command="{x:Static material:DialogHost.CloseDialogCommand}"/>
         </StackPanel>
     </StackPanel>
 </UserControl>

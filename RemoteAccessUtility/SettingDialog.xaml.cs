@@ -23,6 +23,8 @@ namespace RemoteAccessUtility
         public SettingDialog()
         {
             InitializeComponent();
+            var option = new RdpOption();
+            DataContext = option;
         }
     }
 }

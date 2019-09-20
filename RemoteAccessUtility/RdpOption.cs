@@ -7,11 +7,11 @@ namespace RemoteAccessUtility
 {
     public class RdpOption : RdpOptionBase
     {
-        public GeneralOption General;
-        public DisplayOption Display;
-        public LocalResourceOption LocalResource;
-        public ExperienceOption Experience;
-        public DetailOption Detail;
+        public GeneralOption General { get; }
+        public DisplayOption Display { get; }
+        public LocalResourceOption LocalResource { get; }
+        public ExperienceOption Experience { get; }
+        public DetailOption Detail { get; }
 
         public RdpOption()
         {
@@ -42,21 +42,33 @@ namespace RemoteAccessUtility
 
         protected List<string> Options => _options.Select(op => op.Key + op.Value).ToList();
 
-        protected void Set(string key, int value)
+        protected void Set(string key, int? value)
         {
+            if (value == null)
+                return;
+
             if (_options.ContainsKey(key + ":i:"))
                 _options.Remove(key + ":i:");
             _options.Add(key + ":i:", value);
         }
 
-        protected void Get(string key, out int value)
+        protected void Get(string key, out int? value)
         {
+            if (!_options.ContainsKey(key + ":i:"))
+            {
+                value = null;
+                return;
+            }
+
             var val = _options[key + ":i:"];
             value = (int)val;
         }
 
         protected void Set(string key, string value)
         {
+            if (value == null)
+                return;
+
             if (_options.ContainsKey(key + ":s:"))
                 _options.Remove(key + ":s:");
             _options.Add(key + ":s:", value);
@@ -64,12 +76,21 @@ namespace RemoteAccessUtility
 
         protected void Get(string key, out string value)
         {
+            if (!_options.ContainsKey(key + ":s:"))
+            {
+                value = null;
+                return;
+            }
+
             var val = _options[key + ":s:"];
             value = (string)val;
         }
 
         protected void Set(string key, byte[] value)
         {
+            if (value == null)
+                return;
+
             var val = BitConverter.ToString(value).Replace("-", "");
             if (_options.ContainsKey(key + ":b:"))
                 _options.Remove(key + ":b:");
@@ -78,7 +99,13 @@ namespace RemoteAccessUtility
 
         protected void Get(string key, out byte[] value)
         {
-            var val = (string)(_options[key + ":b:"]);
+            if (!_options.ContainsKey(key + ":s:"))
+            {
+                value = null;
+                return;
+            }
+
+            var val = (string)_options[key + ":b:"];
             var bs = new List<byte>();
             for (int i = 0; i < val.Length - 1; i += 2)
             {
@@ -113,11 +140,11 @@ namespace RemoteAccessUtility
         /// <summary>
         /// TCPポート
         /// </summary>
-        public int ServerPort
+        public int? ServerPort
         {
             get
             {
-                Get("server port", out int val);
+                Get("server port", out int? val);
                 return val;
             }
             set => Set("server port", value);
@@ -145,7 +172,7 @@ namespace RemoteAccessUtility
             }
             set
             {
-                var password = DpApiAccessor.Encrypt(DpApiAccessor.KeyType.MachineKey, value, string.Empty, "psw"); 
+                var password = DpApiAccessor.Encrypt(DpApiAccessor.KeyType.MachineKey, value, string.Empty, "psw");
                 Set("password 51", password);
             }
         }
@@ -157,34 +184,21 @@ namespace RemoteAccessUtility
         {
             base._options = options;
 
-            ScreenModeID = ScreenMode.Fullscreen;
+            ScreenModeId = ScreenMode.Fullscreen;
             UseMultimon = false;
-            SessionBpp = Bpp.TrueColor;
+            SessionBitPerPixel = BitPerPixel.TrueColor;
             DisplayConnectionBar = true;
             SmartSizing = false;
-        }
-
-        public enum ScreenMode
-        {
-            /// <summary>
-            /// ウィンドウモード
-            /// </summary>
-            Window = 1,
-
-            /// <summary>
-            /// 全画面モード
-            /// </summary>
-            Fullscreen = 2
         }
 
         /// <summary>
         /// 画面モード
         /// </summary>
-        public ScreenMode ScreenModeID
+        public ScreenMode ScreenModeId
         {
             get
             {
-                Get("screen mode id", out int val);
+                Get("screen mode id", out int? val);
                 return (ScreenMode)val;
             }
             set => Set("screen mode id", (int)value);
@@ -193,11 +207,11 @@ namespace RemoteAccessUtility
         /// <summary>
         /// 画面幅
         /// </summary>
-        public int Desktopwidth
+        public int? DesktopWidth
         {
             get
             {
-                Get("desktopwidth", out int val);
+                Get("desktopwidth", out int? val);
                 return val;
             }
             set => Set("desktopwidth", value);
@@ -206,11 +220,11 @@ namespace RemoteAccessUtility
         /// <summary>
         /// 画面高さ
         /// </summary>
-        public int DesktopHeight
+        public int? DesktopHeight
         {
             get
             {
-                Get("desktopheight", out int val);
+                Get("desktopheight", out int? val);
                 return val;
             }
             set => Set("desktopheight", value);
@@ -223,29 +237,21 @@ namespace RemoteAccessUtility
         {
             get
             {
-                Get("use multimon", out int val);
+                Get("use multimon", out int? val);
                 return val == 1;
             }
             set => Set("use multimon", value ? 1 : 0);
         }
 
-        public enum Bpp
-        {
-            HighColor15Bit = 15,
-            HighColor16Bit = 16,
-            TrueColor = 24,
-            HighestQuality = 32
-        }
-
         /// <summary>
-        /// 画面の色
+        /// 画面の色深度
         /// </summary>
-        public Bpp SessionBpp
+        public BitPerPixel SessionBitPerPixel
         {
             get
             {
-                Get("session bpp", out int val);
-                return (Bpp)val;
+                Get("session bpp", out int? val);
+                return (BitPerPixel)val;
             }
             set => Set("session bpp", (int)value);
         }
@@ -257,7 +263,7 @@ namespace RemoteAccessUtility
         {
             get
             {
-                Get("displayconnectionbar", out int val);
+                Get("displayconnectionbar", out int? val);
                 return val == 1;
             }
             set => Set("displayconnectionbar", value ? 1 : 0);
@@ -270,7 +276,7 @@ namespace RemoteAccessUtility
         {
             get
             {
-                Get("smart sizing", out int val);
+                Get("smart sizing", out int? val);
                 return val == 1;
             }
             set => Set("smart sizing", value ? 1 : 0);
@@ -283,85 +289,36 @@ namespace RemoteAccessUtility
         {
             base._options = options;
 
-            AudioPlayMode = AudioPlayModeConst.Local;
-            AudioCaptureMode = AudioCaptureConst.NoCapture;
+            AudioPlayMode = AudioPlayMode.Local;
+            AudioCaptureMode = AudioCapture.NoCapture;
             KeyboardHook = KeyboardHookMode.FullScreen;
             RedirectClipboard = true;
-        }
-
-        public enum AudioPlayModeConst
-        {
-            /// <summary>
-            /// ローカルコンピューターで再生
-            /// </summary>
-            Local = 0,
-
-            /// <summary>
-            /// リモートコンピューターで再生
-            /// </summary>
-            Remote = 1,
-
-            /// <summary>
-            /// 再生しない
-            /// </summary>
-            NoPlay = 2,
         }
 
         /// <summary>
         /// リモートオーディオ再生
         /// </summary>
-        public AudioPlayModeConst AudioPlayMode
+        public AudioPlayMode AudioPlayMode
         {
             get
             {
-                Get("audiomode", out int val);
-                return (AudioPlayModeConst)val;
+                Get("audiomode", out int? val);
+                return (AudioPlayMode)val;
             }
             set => Set("audiomode", (int)value);
-        }
-
-        public enum AudioCaptureConst
-        {
-            /// <summary>
-            /// 録音しない
-            /// </summary>
-            NoCapture = 0,
-
-            /// <summary>
-            /// ローカルコンピューターから録音
-            /// </summary>
-            Local = 1,
         }
 
         /// <summary>
         /// リモートオーディオ録音
         /// </summary>
-        public AudioCaptureConst AudioCaptureMode
+        public AudioCapture AudioCaptureMode
         {
             get
             {
-                Get("audiocapturemode", out int val);
-                return (AudioCaptureConst)val;
+                Get("audiocapturemode", out int? val);
+                return (AudioCapture)val;
             }
             set => Set("audiocapturemode", (int)value);
-        }
-
-        public enum KeyboardHookMode
-        {
-            /// <summary>
-            /// ローカルコンピューター
-            /// </summary>
-            Local = 0,
-
-            /// <summary>
-            /// リモートコンピューター
-            /// </summary>
-            Remote = 1,
-
-            /// <summary>
-            /// 全画面
-            /// </summary>
-            FullScreen = 2,
         }
 
         /// <summary>
@@ -371,7 +328,7 @@ namespace RemoteAccessUtility
         {
             get
             {
-                Get("keyboardhook", out int val);
+                Get("keyboardhook", out int? val);
                 return (KeyboardHookMode)val;
             }
             set => Set("keyboardhook", (int)value);
@@ -384,7 +341,7 @@ namespace RemoteAccessUtility
         {
             get
             {
-                Get("redirectclipboard", out int val);
+                Get("redirectclipboard", out int? val);
                 return val == 1;
             }
             set => Set("redirectclipboard", value ? 1 : 0);
@@ -397,7 +354,7 @@ namespace RemoteAccessUtility
         {
             get
             {
-                Get("redirectprinters", out int val);
+                Get("redirectprinters", out int? val);
                 return val == 1;
             }
             set => Set("redirectprinters", value ? 1 : 0);
@@ -415,40 +372,6 @@ namespace RemoteAccessUtility
             AutoReconnectionEnabled = true;
         }
 
-
-        public enum ConnectionTypeConst
-        {
-            /// <summary>
-            /// モデム (56Kbps)
-            /// </summary>
-            Modem = 1,
-
-            /// <summary>
-            /// 低速ブロードバンド (256Kbps - 2Mbps)
-            /// </summary>
-            LowSpeed = 2,
-
-            /// <summary>
-            /// 衛星 (2Mbps - 16Mbps)
-            /// </summary>
-            Satellite = 3,
-
-            /// <summary>
-            /// 高速ブロードバンド (2Mbps - 10Mbps)
-            /// </summary>
-            HighSpeed = 4,
-
-            /// <summary>
-            /// WAN (10Mbps - )
-            /// </summary>
-            Wan = 5,
-
-            /// <summary>
-            /// LAN (10Mbps - )
-            /// </summary>
-            Lan = 6,
-        }
-
         /// <summary>
         /// 接続品質
         /// </summary>
@@ -456,7 +379,7 @@ namespace RemoteAccessUtility
         {
             get
             {
-                Get("connection type", out int val);
+                Get("connection type", out int? val);
                 return (ConnectionTypeConst)val;
             }
             set => Set("connection type", (int)value);
@@ -469,7 +392,7 @@ namespace RemoteAccessUtility
         {
             get
             {
-                Get("disable wallpaper", out int val);
+                Get("disable wallpaper", out int? val);
                 return val == 1;
             }
             set => Set("disable wallpaper", value ? 1 : 0);
@@ -482,7 +405,7 @@ namespace RemoteAccessUtility
         {
             get
             {
-                Get("allow font smoothing", out int val);
+                Get("allow font smoothing", out int? val);
                 return val == 1;
             }
             set => Set("allow font smoothing", value ? 1 : 0);
@@ -495,7 +418,7 @@ namespace RemoteAccessUtility
         {
             get
             {
-                Get("allow desktop composition", out int val);
+                Get("allow desktop composition", out int? val);
                 return val == 1;
             }
             set => Set("allow desktop composition", value ? 1 : 0);
@@ -508,7 +431,7 @@ namespace RemoteAccessUtility
         {
             get
             {
-                Get("disable full window drag", out int val);
+                Get("disable full window drag", out int? val);
                 return val == 1;
             }
             set => Set("disable full window drag", value ? 1 : 0);
@@ -521,7 +444,7 @@ namespace RemoteAccessUtility
         {
             get
             {
-                Get("disable menu anims", out int val);
+                Get("disable menu anims", out int? val);
                 return val == 1;
             }
             set => Set("disable menu anims", value ? 1 : 0);
@@ -534,7 +457,7 @@ namespace RemoteAccessUtility
         {
             get
             {
-                Get("disable themes", out int val);
+                Get("disable themes", out int? val);
                 return val == 1;
             }
             set => Set("disable themes", value ? 1 : 0);
@@ -547,7 +470,7 @@ namespace RemoteAccessUtility
         {
             get
             {
-                Get("bitmapcachepersistenable", out int val);
+                Get("bitmapcachepersistenable", out int? val);
                 return val == 1;
             }
             set => Set("bitmapcachepersistenable", value ? 1 : 0);
@@ -560,7 +483,7 @@ namespace RemoteAccessUtility
         {
             get
             {
-                Get("autoreconnection enabled", out int val);
+                Get("autoreconnection enabled", out int? val);
                 return val == 1;
             }
             set => Set("autoreconnection enabled", value ? 1 : 0);
@@ -573,43 +496,161 @@ namespace RemoteAccessUtility
         {
             base._options = options;
 
-            AuthenticationLevel = AuthenticationLevelConst.NoAuthentication;
-        }
-
-        public enum AuthenticationLevelConst
-        {
-            /// <summary>
-            /// 接続し、警告メッセージは表示しない
-            /// </summary>
-            ConnectNoWarn = 0,
-
-            /// <summary>
-            /// 接続しない
-            /// </summary>
-            NoConnect = 1,
-
-            /// <summary>
-            /// 警告メッセージを表示する
-            /// </summary>
-            Warn = 2,
-
-            /// <summary>
-            /// 認証要求をしない
-            /// </summary>
-            NoAuthentication = 3
+            AuthenticationLevel = AuthenticationLevel.NoAuthentication;
         }
 
         /// <summary>
         /// サーバー認証
         /// </summary>
-        public AuthenticationLevelConst AuthenticationLevel
+        public AuthenticationLevel AuthenticationLevel
         {
             get
             {
-                Get("authentication level", out int val);
-                return (AuthenticationLevelConst)val;
+                Get("authentication level", out int? val);
+                return (AuthenticationLevel)val;
             }
             set => Set("authentication level", (int)value);
         }
+    }
+
+    public enum ScreenMode
+    {
+        /// <summary>
+        /// ウィンドウモード
+        /// </summary>
+        Window = 1,
+
+        /// <summary>
+        /// 全画面モード
+        /// </summary>
+        Fullscreen = 2
+    }
+
+    public enum BitPerPixel
+    {
+        /// <summary>
+        /// High Color ( 15 bit )
+        /// </summary>
+        HighColor15Bit = 15,
+
+        /// <summary>
+        /// High Color ( 16 bit )
+        /// </summary>
+        HighColor16Bit = 16,
+
+        /// <summary>
+        /// True Color ( 24 bit )
+        /// </summary>
+        TrueColor = 24,
+
+        /// <summary>
+        /// 32 bit Color
+        /// </summary>
+        HighestQuality = 32
+    }
+
+    public enum AudioPlayMode
+    {
+        /// <summary>
+        /// ローカルコンピューターで再生
+        /// </summary>
+        Local = 0,
+
+        /// <summary>
+        /// リモートコンピューターで再生
+        /// </summary>
+        Remote = 1,
+
+        /// <summary>
+        /// 再生しない
+        /// </summary>
+        NoPlay = 2,
+    }
+
+    public enum AudioCapture
+    {
+        /// <summary>
+        /// 録音しない
+        /// </summary>
+        NoCapture = 0,
+
+        /// <summary>
+        /// ローカルコンピューターから録音
+        /// </summary>
+        Local = 1,
+    }
+
+    public enum KeyboardHookMode
+    {
+        /// <summary>
+        /// ローカルコンピューター
+        /// </summary>
+        Local = 0,
+
+        /// <summary>
+        /// リモートコンピューター
+        /// </summary>
+        Remote = 1,
+
+        /// <summary>
+        /// 全画面
+        /// </summary>
+        FullScreen = 2,
+    }
+
+    public enum ConnectionTypeConst
+    {
+        /// <summary>
+        /// モデム (56Kbps)
+        /// </summary>
+        Modem = 1,
+
+        /// <summary>
+        /// 低速ブロードバンド (256Kbps - 2Mbps)
+        /// </summary>
+        LowSpeed = 2,
+
+        /// <summary>
+        /// 衛星 (2Mbps - 16Mbps)
+        /// </summary>
+        Satellite = 3,
+
+        /// <summary>
+        /// 高速ブロードバンド (2Mbps - 10Mbps)
+        /// </summary>
+        HighSpeed = 4,
+
+        /// <summary>
+        /// WAN (10Mbps - )
+        /// </summary>
+        Wan = 5,
+
+        /// <summary>
+        /// LAN (10Mbps - )
+        /// </summary>
+        Lan = 6,
+    }
+
+    public enum AuthenticationLevel
+    {
+        /// <summary>
+        /// 接続し、警告メッセージは表示しない
+        /// </summary>
+        ConnectNoWarn = 0,
+
+        /// <summary>
+        /// 接続しない
+        /// </summary>
+        NoConnect = 1,
+
+        /// <summary>
+        /// 警告メッセージを表示する
+        /// </summary>
+        Warn = 2,
+
+        /// <summary>
+        /// 認証要求をしない
+        /// </summary>
+        NoAuthentication = 3
     }
 }
