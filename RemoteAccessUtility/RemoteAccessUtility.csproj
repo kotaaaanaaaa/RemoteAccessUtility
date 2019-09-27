@@ -90,6 +90,7 @@
     <Compile Include="PropertyChangedEventHandlerExtensions.cs" />
     <Compile Include="RdpOption.cs" />
     <Compile Include="SecureStringEx.cs" />
+    <Compile Include="Setting.cs" />
     <Compile Include="SettingDialog.xaml.cs">
       <DependentUpon>SettingDialog.xaml</DependentUpon>
     </Compile>

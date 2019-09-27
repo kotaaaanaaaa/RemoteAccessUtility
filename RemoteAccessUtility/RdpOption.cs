@@ -2,20 +2,25 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Input;
 
 namespace RemoteAccessUtility
 {
     public class RdpOption : RdpOptionBase
     {
         public GeneralOption General { get; }
+
         public DisplayOption Display { get; }
+
         public LocalResourceOption LocalResource { get; }
+
         public ExperienceOption Experience { get; }
+
         public DetailOption Detail { get; }
 
         public RdpOption()
         {
-            base._options = new Dictionary<string, object>();
+            _options = new Dictionary<string, object>();
 
             General = new GeneralOption(_options);
             Display = new DisplayOption(_options);
@@ -33,6 +38,37 @@ namespace RemoteAccessUtility
                     sw.WriteLineAsync(option).Wait();
                 }
             }
+        }
+
+        public override string ToString()
+        {
+            return "{" + string.Join(",", _options.Select(kv => kv.Key + "=" + kv.Value).ToArray()) + "}";
+        }
+
+        public void Parse(string value)
+        {
+            _options.Clear();
+            var str = value.Substring(1, value.Length - 2);
+            str.Split(',')
+                .Select(kv => kv.Split('='))
+                .ToDictionary(pair => pair[0], pair => pair[1])
+                .ToList()
+                .ForEach(kv =>
+                {
+                    Add(kv.Key, kv.Value);
+                });
+        }
+
+        private void Add(string key, string value)
+        {
+            if (key.EndsWith(":i:"))
+                _options.Add(key, int.Parse(value));
+            else if (key.EndsWith(":s:"))
+                _options.Add(key, value);
+            else if (key.EndsWith(":b:"))
+                _options.Add(key, value);
+            else
+                _options.Add(key, value);
         }
     }
 

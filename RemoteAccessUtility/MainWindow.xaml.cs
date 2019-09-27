@@ -15,6 +15,7 @@ namespace RemoteAccessUtility
     {
         public ObservableCollection<Environment> Environments = new ObservableCollection<Environment>();
         public ObservableCollection<Account> Accounts = new ObservableCollection<Account>();
+        public Setting SystemSetting = new Setting();
         private static SqliteAccessor db = new SqliteAccessor();
 
         public MainWindow()
@@ -23,6 +24,7 @@ namespace RemoteAccessUtility
             EnvironmentList.ItemsSource = Environments;
 
             InitializeDb();
+            SystemSetting = SelectSetting();
             SelectAccounts().ForEach(x => Accounts.Add(x));
             SelectEnvironments().ForEach(env =>
             {
@@ -36,6 +38,7 @@ namespace RemoteAccessUtility
         }
         private void InitializeDb()
         {
+            InitialzeSetting();
             InitialzeAccount();
             InitialzeEnvironment();
         }
@@ -75,6 +78,21 @@ namespace RemoteAccessUtility
             db.Upsert("environment", dic);
         }
 
+        private void InitialzeSetting()
+        {
+            if (db.HasTable("setting"))
+                return;
+
+            var record = new Setting()
+            {
+                RdpOption = new RdpOption(),
+            };
+            var sql = SqliteAccessor.GetCreateTableSQL("setting", record);
+            db.ExecuteNonQuery(sql);
+            db.ToDictionary(record, out var dic);
+            db.Upsert("setting", dic);
+        }
+
         private List<Account> SelectAccounts()
         {
             var sql = "select * from account";
@@ -89,6 +107,14 @@ namespace RemoteAccessUtility
             var records = new List<Environment>();
             db.ToRecords(db.ExecuteQuery(sql), out records);
             return records;
+        }
+
+        private Setting SelectSetting()
+        {
+            var sql = "select * from setting";
+            var records = new List<Setting>();
+            db.ToRecords(db.ExecuteQuery(sql), out records);
+            return records.First();
         }
 
         private void UpdatetAccounts(List<Account> accounts)
@@ -142,7 +168,7 @@ namespace RemoteAccessUtility
 
         private async void Setting_Click(object sender, RoutedEventArgs e)
         {
-            var dialogView = new SettingDialog();
+            var dialogView = new SettingDialog(SystemSetting);
             var result = await dialogHost.ShowDialog(dialogView);
         }
     }

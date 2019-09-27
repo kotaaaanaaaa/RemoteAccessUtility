@@ -20,11 +20,21 @@ namespace RemoteAccessUtility
     /// </summary>
     public partial class SettingDialog : UserControl
     {
-        public SettingDialog()
+        private Setting Setting;
+
+        public SettingDialog(Setting setting)
         {
             InitializeComponent();
-            var option = new RdpOption();
-            DataContext = option;
+            Setting = setting;
+            DataContext = Setting.RdpOption;
+        }
+
+        /// <summary>
+        /// ダイアログの内容を保存する
+        /// </summary>
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            Setting.RdpOption.Parse(((RdpOption)DataContext).ToString());
         }
     }
 }

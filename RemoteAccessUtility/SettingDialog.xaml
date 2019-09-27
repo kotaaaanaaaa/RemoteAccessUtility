@@ -159,15 +159,12 @@
                 </ComboBox>
             </StackPanel>
         </Grid>
-        <StackPanel
-            Orientation="Horizontal"
-            HorizontalAlignment="Right">
-            <Button Content="Accept"
-                    IsDefault="True"
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button Content="Save"
                     Style="{DynamicResource MaterialDesignFlatButton}"
-                    Command="{x:Static material:DialogHost.CloseDialogCommand}"/>
+                    Click="Save_Click"/>
             <Button Content="Close"
-                    IsCancel="True"
                     Style="{DynamicResource MaterialDesignFlatButton}"
                     Command="{x:Static material:DialogHost.CloseDialogCommand}"/>
         </StackPanel>
