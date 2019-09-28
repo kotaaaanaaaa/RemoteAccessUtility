@@ -7,7 +7,6 @@ namespace RemoteAccessUtility
     public class Environment
     {
         public ICommand Connect { get; set; } = new ConnectCommand();
-        public ICommand Delete { get; set; } = new ConnectCommand();
 
         /// <summary>
         /// ホスト名(表示用)
@@ -42,6 +41,8 @@ namespace RemoteAccessUtility
         /// アカウント
         /// </summary>
         public Account Account { get; set; }
+
+        public static RdpOption SystemRdpOption { get; set; }
     }
 
     public enum OperatingSystemType

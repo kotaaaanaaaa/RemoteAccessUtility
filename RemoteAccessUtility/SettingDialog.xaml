@@ -138,7 +138,7 @@
                     Use Printers Redirect
                 </CheckBox>
             </StackPanel>
-                <StackPanel Grid.Column="2" Margin="5 0 0 0">
+            <StackPanel Grid.Column="2" Margin="5 0 0 0">
                 <TextBlock Text="Other"/>
                 <TextBox Height="40"
                          material:HintAssist.Hint="Server Port"
@@ -162,11 +162,16 @@
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Right">
             <Button Content="Save"
+                    IsDefault="True"
                     Style="{DynamicResource MaterialDesignFlatButton}"
-                    Click="Save_Click"/>
+                    Command="{x:Static material:DialogHost.CloseDialogCommand}"
+                    CommandParameter="{Binding}">
+            </Button>
             <Button Content="Close"
+                    IsCancel="True"
                     Style="{DynamicResource MaterialDesignFlatButton}"
-                    Command="{x:Static material:DialogHost.CloseDialogCommand}"/>
+                    Command="{x:Static material:DialogHost.CloseDialogCommand}">
+            </Button>
         </StackPanel>
     </StackPanel>
 </UserControl>

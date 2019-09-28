@@ -135,7 +135,7 @@ namespace RemoteAccessUtility
 
         protected void Get(string key, out byte[] value)
         {
-            if (!_options.ContainsKey(key + ":s:"))
+            if (!_options.ContainsKey(key + ":b:"))
             {
                 value = null;
                 return;

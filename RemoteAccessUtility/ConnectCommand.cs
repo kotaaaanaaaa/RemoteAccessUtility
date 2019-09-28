@@ -19,7 +19,7 @@ namespace RemoteAccessUtility
             var rdpFilename = "RemoteAccessUtility.rdp";
 
             var environment = (Environment)parameter;
-            var option = new RdpOption();
+            var option = Environment.SystemRdpOption;
             option.General.FullAddress = environment.ConnectionAddress;
             option.General.Username = environment.Account.Name;
             option.General.Password = environment.Account.Password;

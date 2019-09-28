@@ -34,7 +34,7 @@ namespace RemoteAccessUtility
         /// </summary>
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            Setting.RdpOption.Parse(((RdpOption)DataContext).ToString());
+            Setting.RdpOption = (RdpOption) DataContext;
         }
     }
 }

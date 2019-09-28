@@ -25,6 +25,7 @@ namespace RemoteAccessUtility
 
             InitializeDb();
             SystemSetting = SelectSetting();
+            Environment.SystemRdpOption = SystemSetting.RdpOption;
             SelectAccounts().ForEach(x => Accounts.Add(x));
             SelectEnvironments().ForEach(env =>
             {
@@ -170,6 +171,12 @@ namespace RemoteAccessUtility
         {
             var dialogView = new SettingDialog(SystemSetting);
             var result = await dialogHost.ShowDialog(dialogView);
+            var option = result as RdpOption;
+            if (option != null)
+            {
+                SystemSetting.RdpOption = option;
+                Environment.SystemRdpOption = SystemSetting.RdpOption;
+            }
         }
     }
 }
