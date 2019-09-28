@@ -6,85 +6,98 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib" 
              xmlns:local="clr-namespace:RemoteAccessUtility"
              xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
-             mc:Ignorable="d" >
+             mc:Ignorable="d">
     <UserControl.Resources>
         <ObjectDataProvider x:Key="OperatingSystemType"
                             MethodName="GetValues"
                             ObjectType="{x:Type local:OperatingSystemType}">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="local:OperatingSystemType"/>
+                <x:Type TypeName="local:OperatingSystemType" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
     </UserControl.Resources>
-    <StackPanel Margin="16"
-                Width="480">
-        <StackPanel Orientation="Horizontal">
-            <StackPanel Width="235"
-                        Margin="0 0 5 0">
-                <ComboBox x:Name ="EnvironmentsList"
-                          SelectionChanged="EnvironmentsList_SelectionChanged"
-                          DisplayMemberPath="HostName"
-                          Margin="0 8 0 8">
-                </ComboBox>
-                <TextBox material:HintAssist.Hint="Name"
-                         Text="{Binding HostName}"
-                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                         TextChanged="HostName_OnTextChanged"
-                         Margin="0 8 0 8">
-                </TextBox>
-                <TextBox material:HintAssist.Hint="IP Address / Host Name"
-                         Text="{Binding ConnectionAddress}"
-                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                         TextChanged="ConnectionAddress_OnTextChanged"
-                         Margin="0 8 0 8">
-                </TextBox>
-                <ComboBox HorizontalAlignment="Left" 
-                          material:HintAssist.Hint="OS"
-                          Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                          ItemsSource="{Binding Source={StaticResource OperatingSystemType}}"
-                          SelectedItem="{Binding Path=OsType}"
-                          VerticalAlignment="Top"
-                          Margin="0 5 0 5">
-                </ComboBox>
-            </StackPanel>
-            <StackPanel Width="235"
-                        Margin="5 0 0 0">
-                <StackPanel Orientation="Horizontal">
-                    <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                            IsEnabled="{Binding CanSave}"
-                            Click="AddEnvironment_Click"
-                            Height="24"
-                            Width="24"
-                            Margin="4 10 4 10">
-                            <material:PackIcon Kind="PlusCircleOutline" />
-                    </Button>
-                    <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                            Click="RemoveEnvironment_Click"
-                            Height="24"
-                            Width="24"
-                            Margin="4 10 4 10">
-                            <material:PackIcon Kind="MinusCircleOutline" />
-                    </Button>
-                </StackPanel>
-                <ComboBox x:Name ="AccountsList"
-                          SelectionChanged="AccountsList_SelectionChanged"
-                          DisplayMemberPath="Name"
-                          Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                          Margin="0 5 0 0"
-                          material:HintAssist.Hint="Account">
-                </ComboBox>
-            </StackPanel>
+    <Grid Margin="16"
+          Width="480" Height="230">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <ComboBox x:Name ="EnvironmentsList"
+                  Grid.Row="0" Grid.Column="0" VerticalAlignment="Bottom"
+                  Height="40"
+                  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                  SelectionChanged="EnvironmentsList_SelectionChanged"
+                  DisplayMemberPath="HostName"
+                  Margin="0 0 5 0">
+        </ComboBox>
+        <TextBox Grid.Row="1" Grid.Column="0" VerticalAlignment="Bottom"
+                 material:HintAssist.Hint="Name"
+                 Text="{Binding HostName}"
+                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                 TextChanged="HostName_OnTextChanged"
+                 Margin="0 0 5 0">
+        </TextBox>
+        <TextBox Grid.Row="2" Grid.Column="0" VerticalAlignment="Bottom"
+                 material:HintAssist.Hint="IP Address / Host Name"
+                 Text="{Binding ConnectionAddress}"
+                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                 TextChanged="ConnectionAddress_OnTextChanged"
+                 Margin="0 0 5 0">
+        </TextBox>
+        <ComboBox Grid.Row="3" Grid.Column="0" VerticalAlignment="Bottom"
+                  HorizontalAlignment="Left" 
+                  material:HintAssist.Hint="OS"
+                  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                  ItemsSource="{Binding Source={StaticResource OperatingSystemType}}"
+                  SelectedItem="{Binding Path=OsType}"
+                  Margin="0 0 5 0">
+        </ComboBox>
+        <StackPanel Grid.Row="0" Grid.Column="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Left"
+                    Width="60"
+                    Margin="5 0 0 0">
+            <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                    IsEnabled="{Binding CanSave}"
+                    Click="AddEnvironment_Click"
+                    Height="24"
+                    Width="24"
+                    Margin="2">
+                <material:PackIcon Kind="PlusCircleOutline" />
+            </Button>
+            <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                    Click="RemoveEnvironment_Click"
+                    Height="24"
+                    Width="24"
+                    Margin="2">
+                <material:PackIcon Kind="MinusCircleOutline" />
+            </Button>
         </StackPanel>
-        <StackPanel Orientation="Horizontal"
+        <ComboBox x:Name ="AccountsList"
+                  Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom"
+                  SelectionChanged="AccountsList_SelectionChanged"
+                  DisplayMemberPath="Name"
+                  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                  Margin="5 0 0 0"
+                  material:HintAssist.Hint="Account">
+        </ComboBox>
+        <StackPanel Grid.Row="4" Grid.Column="1"
+                    Orientation="Horizontal"
                     HorizontalAlignment="Right">
             <Button Content="Save"
                     Style="{DynamicResource MaterialDesignFlatButton}"
                     IsEnabled="{Binding CanSave}"
-                    Click="Save_Click"/>
+                    Click="Save_Click" />
             <Button Content="Close"
-                    Margin="0 0 0 0"
                     Style="{DynamicResource MaterialDesignFlatButton}"
-                    Command="{x:Static material:DialogHost.CloseDialogCommand}"/>
+                    Command="{x:Static material:DialogHost.CloseDialogCommand}" />
         </StackPanel>
-    </StackPanel>
+    </Grid>
 </UserControl>
