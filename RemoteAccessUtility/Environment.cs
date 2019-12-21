@@ -1,12 +1,15 @@
 ﻿using CoreUtilitiesPack;
+using Prism.Commands;
+using System;
 using System.ComponentModel;
-using System.Windows.Input;
+using System.Diagnostics;
+using System.IO;
 
 namespace RemoteAccessUtility
 {
     public class Environment
     {
-        public ICommand Connect { get; set; } = new ConnectCommand();
+        public DelegateCommand ConnectCommand { get; set; }
 
         /// <summary>
         /// ホスト名(表示用)
@@ -43,6 +46,27 @@ namespace RemoteAccessUtility
         public Account Account { get; set; }
 
         public static RdpOption SystemRdpOption { get; set; }
+
+        public Environment()
+        {
+            ConnectCommand = new DelegateCommand(Connect);
+        }
+
+        /// <summary>
+        /// 接続する
+        /// </summary>
+        private void Connect()
+        {
+            var rdpFilename = "RemoteAccessUtility.rdp";
+
+            var option = SystemRdpOption;
+            option.General.FullAddress = ConnectionAddress;
+            option.General.Username = Account.Name;
+            option.General.Password = Account.Password;
+            option.Write(rdpFilename);
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, rdpFilename);
+            Process.Start("mstsc", path);
+        }
     }
 
     public enum OperatingSystemType

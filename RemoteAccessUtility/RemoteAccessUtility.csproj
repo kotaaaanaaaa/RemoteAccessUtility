@@ -64,7 +64,6 @@
       <DependentUpon>AccountEditDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="AccountEditDialogViewModel.cs" />
-    <Compile Include="ConnectCommand.cs" />
     <Compile Include="DpApiAccessor.cs" />
     <Compile Include="Environment.cs" />
     <Compile Include="EnvironmentEditDialog.xaml.cs">
@@ -168,6 +167,9 @@
     </PackageReference>
     <PackageReference Include="MaterialDesignThemes">
       <Version>2.5.0.1205</Version>
+    </PackageReference>
+    <PackageReference Include="Prism.Core">
+      <Version>7.2.0.1422</Version>
     </PackageReference>
     <PackageReference Include="System.Data.SQLite.Core">
       <Version>1.0.109.2</Version>

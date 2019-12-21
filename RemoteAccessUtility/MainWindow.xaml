@@ -33,8 +33,7 @@
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Command="{Binding Connect}"
-                                        CommandParameter="{Binding}"
+                                <Button Command="{Binding ConnectCommand}"
                                         ToolTip="Connect this computer"
                                         Margin ="0,-10,0,-10">
                                     <icon:RemoteDesktop/>
