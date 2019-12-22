@@ -52,6 +52,14 @@ namespace RemoteAccessUtility
             ConnectCommand = new DelegateCommand(Connect);
         }
 
+        public Environment(Environment env)
+        {
+            HostName = env.HostName;
+            ConnectionAddress = env.ConnectionAddress;
+            OsType = env.OsType;
+            AccountGuid = env.AccountGuid;
+        }
+
         /// <summary>
         /// 接続する
         /// </summary>

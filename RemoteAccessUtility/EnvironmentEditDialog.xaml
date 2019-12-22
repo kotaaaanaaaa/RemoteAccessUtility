@@ -6,6 +6,7 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib" 
              xmlns:local="clr-namespace:RemoteAccessUtility"
              xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d">
     <UserControl.Resources>
         <ObjectDataProvider x:Key="OperatingSystemType"
@@ -33,30 +34,45 @@
                   Grid.Row="0" Grid.Column="0" VerticalAlignment="Bottom"
                   Height="40"
                   Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                  SelectionChanged="EnvironmentsList_SelectionChanged"
+                  ItemsSource="{Binding Environments}"
+                  SelectedItem="{Binding EnvironmentsSelectedItem}"
+                  SelectedIndex="{Binding EnvironmentsSelectedIndex}"
                   DisplayMemberPath="HostName"
                   Margin="0 0 5 0">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding EnvironmentChangedCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
         </ComboBox>
         <TextBox Grid.Row="1" Grid.Column="0" VerticalAlignment="Bottom"
                  material:HintAssist.Hint="Name"
-                 Text="{Binding HostName}"
                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                 TextChanged="HostName_OnTextChanged"
+                 Text="{Binding HostName, Mode=TwoWay}"
                  Margin="0 0 5 0">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="TextChanged">
+                    <i:InvokeCommandAction Command="{Binding HostNameChangedCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
         </TextBox>
         <TextBox Grid.Row="2" Grid.Column="0" VerticalAlignment="Bottom"
                  material:HintAssist.Hint="IP Address / Host Name"
-                 Text="{Binding ConnectionAddress}"
                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                 TextChanged="ConnectionAddress_OnTextChanged"
+                 Text="{Binding ConnectionAddress}"
                  Margin="0 0 5 0">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="TextChanged">
+                    <i:InvokeCommandAction Command="{Binding ConnectionAddressChangedCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
         </TextBox>
         <ComboBox Grid.Row="3" Grid.Column="0" VerticalAlignment="Bottom"
                   HorizontalAlignment="Left" 
                   material:HintAssist.Hint="OS"
                   Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                   ItemsSource="{Binding Source={StaticResource OperatingSystemType}}"
-                  SelectedItem="{Binding Path=OsType}"
+                  SelectedItem="{Binding OsType}"
                   Margin="0 0 5 0">
         </ComboBox>
         <StackPanel Grid.Row="0" Grid.Column="1"
@@ -66,14 +82,14 @@
                     Margin="5 0 0 0">
             <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
                     IsEnabled="{Binding CanSave}"
-                    Click="AddEnvironment_Click"
+                    Command="{Binding AddEnvironmentCommand}"
                     Height="24"
                     Width="24"
                     Margin="2">
                 <material:PackIcon Kind="PlusCircleOutline" />
             </Button>
             <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                    Click="RemoveEnvironment_Click"
+                    Command="{Binding RemoveEnvironmentCommand}"
                     Height="24"
                     Width="24"
                     Margin="2">
@@ -82,11 +98,18 @@
         </StackPanel>
         <ComboBox x:Name ="AccountsList"
                   Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom"
-                  SelectionChanged="AccountsList_SelectionChanged"
-                  DisplayMemberPath="Name"
+                  material:HintAssist.Hint="Account"
                   Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                  Margin="5 0 0 0"
-                  material:HintAssist.Hint="Account">
+                  ItemsSource="{Binding Accounts}"
+                  SelectedItem="{Binding AccountsSelectedItem}"
+                  SelectedIndex="{Binding AccountsSelectedIndex}"
+                  DisplayMemberPath="Name"
+                  Margin="5 0 0 0">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding AccountChangedCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
         </ComboBox>
         <StackPanel Grid.Row="4" Grid.Column="1"
                     Orientation="Horizontal"
@@ -94,7 +117,7 @@
             <Button Content="Save"
                     Style="{DynamicResource MaterialDesignFlatButton}"
                     IsEnabled="{Binding CanSave}"
-                    Click="Save_Click" />
+                    Command="{Binding SaveClickCommand}"/>
             <Button Content="Close"
                     Style="{DynamicResource MaterialDesignFlatButton}"
                     Command="{x:Static material:DialogHost.CloseDialogCommand}" />
