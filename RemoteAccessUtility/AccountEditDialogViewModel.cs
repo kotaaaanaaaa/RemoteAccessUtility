@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Prism.Commands;
+using Prism.Mvvm;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Net;
@@ -8,24 +11,114 @@ using System.Security;
 
 namespace RemoteAccessUtility
 {
-    public class AccountEditDialogViewModel : INotifyPropertyChanged, INotifyDataErrorInfo
+    public class AccountEditDialogViewModel : BindableBase, INotifyDataErrorInfo
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public ObservableCollection<Account> Source { get; set; }
+
+        public static readonly char MaskChar = '●';
+
 
         public AccountEditDialogViewModel()
         {
             ValidateName();
             ValidatePassword();
+
+            AddAccountCommand = new DelegateCommand(AddAccount, () => CanSave);
+            RemoveAccountCommand = new DelegateCommand(RemoveAccount);
+            AccountsChangedCommand = new DelegateCommand(AccountsChanged);
+            NameChangedCommand = new DelegateCommand(NameChanged);
+            SaveClickCommand = new DelegateCommand(SaveClick, () => CanSave);
         }
 
-        public AccountEditDialogViewModel(Account account, char maskChar) : this()
+        public ObservableCollection<Account> Accounts
         {
-            Name = account.Name;
-            Password = account.Password;
-            Confirm = account.Password;
-            Guid = account.Guid;
-            DisplayPassword = "".PadLeft(Password.Length, maskChar);
-            DisplayConfirm = "".PadLeft(Confirm.Length, maskChar);
+            get => _accounts;
+            set => SetProperty(ref _accounts, value);
+        }
+        private ObservableCollection<Account> _accounts;
+
+        public Account AccountsSelectedItem
+        {
+            get => _accountsSelectedItem;
+            set
+            {
+                SetProperty(ref _accountsSelectedItem, value);
+                _accountsSelectedIndex = Accounts.IndexOf(value);
+                AccountsChanged();
+            }
+        }
+        private Account _accountsSelectedItem;
+
+        public int AccountsSelectedIndex
+        {
+            get => _accountsSelectedIndex;
+            set
+            {
+                SetProperty(ref _accountsSelectedIndex, value);
+                if (Accounts == null)
+                    return;
+                if (value <= -1 || Accounts.Count <= value)
+                {
+                    _accountsSelectedItem = null;
+                }
+                else
+                {
+                    _accountsSelectedItem = Accounts[value];
+                }
+                AccountsChanged();
+            }
+        }
+        private int _accountsSelectedIndex;
+
+
+        public DelegateCommand AccountsChangedCommand { get; set; }
+
+        /// <summary>
+        /// アカウントの選択変更時
+        /// </summary>
+        private void AccountsChanged()
+        {
+            if (AccountsSelectedItem == null)
+            {
+                Name = string.Empty;
+                Password = string.Empty;
+                Confirm = string.Empty;
+                DisplayPassword = string.Empty;
+                DisplayConfirm = string.Empty;
+            }
+            else
+            {
+                Name = AccountsSelectedItem.Name;
+                Password = AccountsSelectedItem.Password;
+                Confirm = AccountsSelectedItem.Password;
+                DisplayPassword = Mask(Password);
+                DisplayConfirm = Mask(Confirm);
+            }
+        }
+
+        public DelegateCommand AddAccountCommand { get; set; }
+
+        /// <summary>
+        /// アカウントを追加する
+        /// </summary>
+        private void AddAccount()
+        {
+            var account = new Account();
+            Accounts.Add(account);
+            AccountsSelectedItem = account;
+        }
+
+        public DelegateCommand RemoveAccountCommand { get; set; }
+
+        /// <summary>
+        /// アカウントを削除する
+        /// </summary>
+        private void RemoveAccount()
+        {
+            var account = AccountsSelectedItem;
+            AccountsSelectedIndex = -1;
+            Accounts.Remove(account);
+            AccountsSelectedIndex = 0;
         }
 
         /// <summary>
@@ -36,11 +129,20 @@ namespace RemoteAccessUtility
             get => _name;
             set
             {
-                PropertyChanged.RaiseIfSet(() => Name, ref _name, value);
+                SetProperty(ref _name, value);
+                AccountsSelectedItem.Name = value;
+
                 ValidateName();
             }
         }
         private string _name;
+
+        public DelegateCommand NameChangedCommand { get; set; }
+
+        private void NameChanged()
+        {
+            ValidateName();
+        }
 
         /// <summary>
         /// パスワード
@@ -54,9 +156,10 @@ namespace RemoteAccessUtility
                 if (password.Equals(_password))
                     return;
                 _password = password;
+                AccountsSelectedItem.Password = value;
 
                 ValidatePassword();
-                PropertyChanged.Raise(() => Password);
+                RaisePropertyChanged("Password");
             }
         }
         private SecureString _password;
@@ -75,7 +178,7 @@ namespace RemoteAccessUtility
                 _confirm = password;
 
                 ValidatePassword();
-                PropertyChanged.Raise(() => Confirm);
+                RaisePropertyChanged("Confirm");
             }
         }
         private SecureString _confirm;
@@ -88,10 +191,10 @@ namespace RemoteAccessUtility
             get => _displayPassword;
             set
             {
-                PropertyChanged.RaiseIfSet(() => DisplayPassword, ref _displayPassword, value);
+                SetProperty(ref _displayPassword, value);
             }
         }
-        private string _displayPassword;
+        private string _displayPassword = string.Empty;
 
         /// <summary>
         /// 確認用パスワード(表示用)
@@ -101,12 +204,10 @@ namespace RemoteAccessUtility
             get => _displayConfirm;
             set
             {
-                PropertyChanged.RaiseIfSet(() => DisplayConfirm, ref _displayConfirm, value);
+                SetProperty(ref _displayConfirm, value);
             }
         }
-        private string _displayConfirm;
-
-        public string Guid;
+        private string _displayConfirm = string.Empty;
 
         /// <summary>
         /// 保存可否を取得する
@@ -114,6 +215,41 @@ namespace RemoteAccessUtility
         public bool CanSave
         {
             get { return !HasErrors; }
+        }
+
+        /// <summary>
+        /// テキストをマスクする
+        /// </summary>
+        /// <param name="plain"></param>
+        /// <param name="all"></param>
+        /// <returns></returns>
+        public static string Mask(string plain, bool all = true)
+        {
+            if (plain.Length == 0)
+                return string.Empty;
+            if (all)
+                return string.Empty.PadLeft(plain.Length, MaskChar);
+            return string.Empty.PadLeft(plain.Length - 1, MaskChar) + plain.Substring(plain.Length - 1);
+        }
+
+        /// <summary>
+        /// テキストのマスクを解除する
+        /// </summary>
+        /// <param name="masked"></param>
+        /// <param name="plain"></param>
+        /// <returns></returns>
+        public static string UnMask(string masked, string plain)
+        {
+            var maskedLength = masked.LastIndexOf(MaskChar) + 1;
+
+            if (maskedLength == 0)
+                return masked;
+            if (maskedLength < masked.Length)
+                return plain.Substring(0, maskedLength) + masked.Substring(maskedLength);
+            if (maskedLength < plain.Length)
+                return plain.Substring(0, maskedLength);
+
+            return plain;
         }
 
         #region Validataion
@@ -132,13 +268,13 @@ namespace RemoteAccessUtility
             {
                 RemoveError(() => Name);
             }
-            PropertyChanged.Raise(() => CanSave);
+            RaisePropertyChanged("CanSave");
         }
 
         /// <summary>
         /// パスワードを検証する
         /// </summary>
-        private void ValidatePassword()
+        public void ValidatePassword()
         {
             if (Password == Confirm)
             {
@@ -148,7 +284,7 @@ namespace RemoteAccessUtility
             {
                 AddError(() => DisplayConfirm, "Confirm password must be same.");
             }
-            PropertyChanged.Raise(() => CanSave);
+            RaisePropertyChanged("CanSave");
         }
 
         readonly Dictionary<string, List<string>> _currentErrors = new Dictionary<string, List<string>>();
@@ -217,5 +353,24 @@ namespace RemoteAccessUtility
         }
 
         #endregion
+
+        public DelegateCommand SaveClickCommand { get; set; }
+
+        /// <summary>
+        /// ダイアログの内容を保存する
+        /// </summary>
+        private void SaveClick()
+        {
+            Source.Clear();
+            foreach (var account in Accounts)
+            {
+                Source.Add(new Account
+                {
+                    Name = account.Name,
+                    Password = account.Password,
+                    Guid = account.Guid,
+                });
+            }
+        }
     }
 }

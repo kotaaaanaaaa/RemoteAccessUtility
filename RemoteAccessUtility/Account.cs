@@ -37,5 +37,14 @@ namespace RemoteAccessUtility
             set => _guid = value;
         }
         private string _guid = null;
+
+        public Account() { }
+
+        public Account(Account account)
+        {
+            Name = account.Name;
+            Password = account.Password;
+            Guid = account.Guid;
+        }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using TextBox = System.Windows.Controls.TextBox;
 using UserControl = System.Windows.Controls.UserControl;
+using ViewModel = RemoteAccessUtility.AccountEditDialogViewModel;
 
 namespace RemoteAccessUtility
 {
@@ -15,131 +15,90 @@ namespace RemoteAccessUtility
     /// </summary>
     public partial class AccountEditDialog : UserControl
     {
-        public ObservableCollection<AccountEditDialogViewModel> AccountViewModels;
-        public ObservableCollection<Account> Accounts;
-        private readonly char MaskChar = '●';
-        private Guid PasswordEncryptGuid;
-        private bool OnPasswordChanging = false;
-        private Guid ConfirmEncryptGuid;
-        private bool OnConfirmChanging = false;
+        private ViewModel vm = new ViewModel();
+        private Guid PasswordMaskingGuid;
+        private Guid ConfirmMaskingGuid;
 
         public AccountEditDialog(ObservableCollection<Account> srcs)
         {
-            Accounts = srcs;
-            AccountViewModels = new ObservableCollection<AccountEditDialogViewModel>();
-            Accounts.ToList().ForEach(x => { AccountViewModels.Add(new AccountEditDialogViewModel(x, MaskChar)); });
+            var accounts = new ObservableCollection<Account>();
+            srcs.ToList()
+                .ForEach(x => accounts.Add(new Account(x)));
+
+            vm.Source = srcs;
+            vm.Accounts = accounts;
 
             InitializeComponent();
-            AccountsList.ItemsSource = AccountViewModels;
-            AccountsList.SelectedIndex = 0;
-        }
-
-        private async void AccountsList_SelectionChanged(object sender, RoutedEventArgs e)
-        {
-            var selectedItem = (AccountEditDialogViewModel)AccountsList.SelectedItem;
-            DataContext = selectedItem;
-
-            Password.Select(selectedItem.Password.Length, 0);
-            Confirm.Select(selectedItem.Confirm.Length, 0);
-        }
-
-        private async void AddAccount_Click(object sender, RoutedEventArgs e)
-        {
-            var newAccount = new AccountEditDialogViewModel();
-            AccountViewModels.Add(newAccount);
-            AccountsList.SelectedItem = newAccount;
-        }
-
-        private async void RemoveAccount_Click(object sender, RoutedEventArgs e)
-        {
-            if (AccountViewModels.Count <= 1) return;
-            var selectedItem = (AccountEditDialogViewModel)AccountsList.SelectedItem;
-            if (selectedItem == null) return;
-            AccountsList.SelectedIndex = 0;
-            AccountViewModels.Remove(selectedItem);
-        }
-
-        private async void Name_OnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            var textBox = (TextBox)sender;
-            var selectedItem = (AccountEditDialogViewModel)DataContext;
-            selectedItem.ValidateName(textBox.Text);
-        }
-
-        private async void Password_OnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            var textBox = (TextBox)sender;
-            var selectedItem = (AccountEditDialogViewModel)DataContext;
-            var now = selectedItem.Password;
-
-            var newText = GetText(textBox, now);
-
-            if (newText == now)
-                return;
-            selectedItem.Password = newText;
-
-            if (OnPasswordChanging)
-                return;
-
-            if (now.IndexOf(newText) == 0)
-                return;
-
-            var newGuid = Guid.NewGuid();
-            PasswordEncryptGuid = newGuid;
-            Mask(textBox, newText, ref OnPasswordChanging, false);
-
-            await Task.Delay(1000);
-            if (!newGuid.Equals(PasswordEncryptGuid))
-                return;
-            Mask(textBox, newText, ref OnPasswordChanging, true);
-        }
-
-        private async void Confirm_OnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            var textBox = (TextBox)sender;
-            var selectedItem = (AccountEditDialogViewModel)DataContext;
-            var now = selectedItem.Confirm;
-
-            var newText = GetText(textBox, now);
-
-            if (newText == now)
-                return;
-            selectedItem.Confirm = newText;
-
-            if (OnConfirmChanging)
-                return;
-
-            if (now.IndexOf(newText) == 0)
-                return;
-
-            var newGuid = Guid.NewGuid();
-            ConfirmEncryptGuid = newGuid;
-            Mask(textBox, newText, ref OnConfirmChanging, false);
-
-            await Task.Delay(1000);
-            if (!newGuid.Equals(ConfirmEncryptGuid))
-                return;
-            Mask(textBox, newText, ref OnConfirmChanging, true);
+            DataContext = vm;
+            vm.AccountsSelectedIndex = 0;
         }
 
         /// <summary>
-        /// マスクされたテキストボックスから文字列を取得する
+        /// パスワード変更時
         /// </summary>
-        /// <param name="textBox"></param>
-        /// <param name="now"></param>
-        /// <returns></returns>
-        private string GetText(TextBox textBox, string now)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void Password_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            var encryptedLength = textBox.Text.LastIndexOf(MaskChar) + 1;
+            var nowText = vm.Password;
+            var newText = ViewModel.UnMask(Password.Text, nowText);
 
-            if (encryptedLength == 0)
-                return textBox.Text;
-            if (encryptedLength < textBox.Text.Length)
-                return now.Substring(0, encryptedLength) + textBox.Text.Substring(encryptedLength);
-            if (encryptedLength < now.Length)
-                return now.Substring(0, encryptedLength);
+            //マスク時に再処理させない
+            if (newText == nowText)
+                return;
 
-            return now;
+            var newGuid = Guid.NewGuid();
+            PasswordMaskingGuid = newGuid;
+            vm.Password = newText;
+            vm.ValidatePassword();
+
+            //削除時はマスクのみ
+            if (nowText.IndexOf(newText) == 0)
+            {
+                Mask(Password, vm.Password, true);
+                return;
+            }
+
+            //追加時は最後の1文字を一瞬表示
+            Mask(Password, newText, false);
+            await Task.Delay(1000);
+            if (!newGuid.Equals(PasswordMaskingGuid))
+                return;
+            Mask(Password, vm.Password, true);
+        }
+
+        /// <summary>
+        /// 確認用パスワード変更時
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void Confirm_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            var nowText = vm.Confirm;
+            var newText = ViewModel.UnMask(Confirm.Text, nowText);
+
+            //マスク時に再処理させない
+            if (newText == nowText)
+                return;
+
+            var newGuid = Guid.NewGuid();
+            ConfirmMaskingGuid = newGuid;
+            vm.Confirm = newText;
+            vm.ValidatePassword();
+
+            //削除時はマスクのみ
+            if (nowText.IndexOf(newText) == 0)
+            {
+                Mask(Confirm, newText, true);
+                return;
+            }
+
+            //追加時は最後の1文字を一瞬表示
+            Mask(Confirm, newText,  false);
+            await Task.Delay(1000);
+            if (!newGuid.Equals(ConfirmMaskingGuid))
+                return;
+            Mask(Confirm, newText, true);
         }
 
         /// <summary>
@@ -148,38 +107,11 @@ namespace RemoteAccessUtility
         /// <param name="textBox"></param>
         /// <param name="content"></param>
         /// <param name="all"></param>
-        private void Mask(TextBox textBox, string content, ref bool changing, bool all = true)
+        private static void Mask(TextBox textBox, string content,  bool all = true)
         {
-            string text;
-            if (content.Length == 0)
-                text = "";
-            else if (all)
-                text = "".PadLeft(content.Length, MaskChar);
-            else
-                text = "".PadLeft(content.Length - 1, MaskChar) + content.Substring(content.Length - 1);
-
-            changing = true;
+            string text = ViewModel.Mask(content, all);
             textBox.Text = text;
-            changing = false;
             textBox.Select(text.Length, 0);
-        }
-
-        /// <summary>
-        /// ダイアログの内容を保存する
-        /// </summary>
-        private void Save_Click(object sender, RoutedEventArgs e)
-        {
-            Accounts.Clear();
-
-            foreach (var vm in AccountViewModels)
-            {
-                Accounts.Add(new Account()
-                {
-                    Name = vm.Name,
-                    Password = vm.Password,
-                    Guid = vm.Guid,
-                });
-            }
         }
     }
 }

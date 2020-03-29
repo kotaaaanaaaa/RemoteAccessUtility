@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d">
     <UniformGrid Columns="1"
                  Margin="16"
@@ -11,22 +12,29 @@
         <StackPanel Orientation="Horizontal">
             <ComboBox x:Name ="AccountsList"
                       Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                      SelectionChanged="AccountsList_SelectionChanged"
+                      ItemsSource="{Binding Accounts}"
+                      SelectedIndex="{Binding AccountsSelectedIndex}"
+                      SelectedItem="{Binding AccountsSelectedItem}"
                       DisplayMemberPath="Name"
                       Width="175" Height="40">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding AccountsChangedCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
             </ComboBox>
             <StackPanel Orientation="Horizontal"
                         Width="60"
                         Margin="5,0,0,0">
                 <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
                         IsEnabled="{Binding CanSave}"
-                        Click="AddAccount_Click"
+                        Command="{Binding AddAccountCommand}"
                         Height="24" Width="24"
                         Margin="2">
                     <material:PackIcon Kind="PlusCircleOutline" />
                 </Button>
                 <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                        Click="RemoveAccount_Click"
+                        Command="{Binding RemoveEnvironmentCommand}"
                         Height="24" Width="24"
                         Margin="2">
                     <material:PackIcon Kind="MinusCircleOutline" />
@@ -35,27 +43,31 @@
         </StackPanel>
         <TextBox material:HintAssist.Hint="Name"
                  Text="{Binding Name}"
-                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                 TextChanged="Name_OnTextChanged">
+                 Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="TextChanged">
+                    <i:InvokeCommandAction Command="{Binding NameChangedCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
         </TextBox>
         <TextBox x:Name="Password"
                  material:HintAssist.Hint="Password"
-                 TextChanged="Password_OnTextChanged"
                  Text="{Binding DisplayPassword}"
-                 Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                 TextChanged="Password_OnTextChanged">
         </TextBox>
         <TextBox x:Name="Confirm"
                  material:HintAssist.Hint="Confirm Password"
-                 TextChanged="Confirm_OnTextChanged"
                  Text="{Binding DisplayConfirm}"
-                 Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                 TextChanged="Confirm_OnTextChanged">
         </TextBox>
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Right">
             <Button Content="Save"
                     Style="{DynamicResource MaterialDesignFlatButton}"
                     IsEnabled="{Binding CanSave}"
-                    Click="Save_Click" />
+                    Command="{Binding SaveClickCommand}" />
             <Button Content="Close"
                     IsDefault="True"
                     Style="{DynamicResource MaterialDesignFlatButton}"
