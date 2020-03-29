@@ -12,14 +12,14 @@ namespace RemoteAccessUtility
     {
         private EnvironmentEditDialogViewModel vm = new EnvironmentEditDialogViewModel();
 
-        public EnvironmentEditDialog(ObservableCollection<Environment> environments, IEnumerable<Account> accounts)
+        public EnvironmentEditDialog(ObservableCollection<Environment> srcs, IEnumerable<Account> accounts)
         {
-            var envs = new ObservableCollection<Environment>();
-            environments.ToList()
-                .ForEach(x => envs.Add(new Environment(x)));
+            var environments = new ObservableCollection<Environment>();
+            srcs.ToList()
+                .ForEach(x => environments.Add(new Environment(x)));
 
-            vm.Source = environments;
-            vm.Environments = envs;
+            vm.Source = srcs;
+            vm.Environments = environments;
             vm.Accounts = accounts;
 
             InitializeComponent();

@@ -23,9 +23,9 @@ namespace RemoteAccessUtility
         private Guid ConfirmEncryptGuid;
         private bool OnConfirmChanging = false;
 
-        public AccountEditDialog(ObservableCollection<Account> accounts)
+        public AccountEditDialog(ObservableCollection<Account> srcs)
         {
-            Accounts = accounts;
+            Accounts = srcs;
             AccountViewModels = new ObservableCollection<AccountEditDialogViewModel>();
             Accounts.ToList().ForEach(x => { AccountViewModels.Add(new AccountEditDialogViewModel(x, MaskChar)); });
 
