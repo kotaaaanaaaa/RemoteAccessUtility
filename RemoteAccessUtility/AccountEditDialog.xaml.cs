@@ -34,6 +34,16 @@ namespace RemoteAccessUtility
         }
 
         /// <summary>
+        /// 名前変更時
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void Name_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            vm.Name = Name.Text;
+        }
+
+        /// <summary>
         /// パスワード変更時
         /// </summary>
         /// <param name="sender"></param>
@@ -94,7 +104,7 @@ namespace RemoteAccessUtility
             }
 
             //追加時は最後の1文字を一瞬表示
-            Mask(Confirm, newText,  false);
+            Mask(Confirm, newText, false);
             await Task.Delay(1000);
             if (!newGuid.Equals(ConfirmMaskingGuid))
                 return;
@@ -107,7 +117,7 @@ namespace RemoteAccessUtility
         /// <param name="textBox"></param>
         /// <param name="content"></param>
         /// <param name="all"></param>
-        private static void Mask(TextBox textBox, string content,  bool all = true)
+        private static void Mask(TextBox textBox, string content, bool all = true)
         {
             string text = ViewModel.Mask(content, all);
             textBox.Text = text;

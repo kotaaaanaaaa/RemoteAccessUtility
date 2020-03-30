@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Net;
 using System.Security;
@@ -26,7 +27,6 @@ namespace RemoteAccessUtility
             AddAccountCommand = new DelegateCommand(AddAccount, () => CanSave);
             RemoveAccountCommand = new DelegateCommand(RemoveAccount);
             AccountsChangedCommand = new DelegateCommand(AccountsChanged);
-            NameChangedCommand = new DelegateCommand(NameChanged);
             SaveClickCommand = new DelegateCommand(SaveClick, () => CanSave);
         }
 
@@ -132,17 +132,10 @@ namespace RemoteAccessUtility
                 SetProperty(ref _name, value);
                 AccountsSelectedItem.Name = value;
 
-                ValidateName();
+                ValidateName(_name);
             }
         }
         private string _name;
-
-        public DelegateCommand NameChangedCommand { get; set; }
-
-        private void NameChanged()
-        {
-            ValidateName();
-        }
 
         /// <summary>
         /// パスワード
@@ -159,7 +152,6 @@ namespace RemoteAccessUtility
                 AccountsSelectedItem.Password = value;
 
                 ValidatePassword();
-                RaisePropertyChanged("Password");
             }
         }
         private SecureString _password;
@@ -178,7 +170,6 @@ namespace RemoteAccessUtility
                 _confirm = password;
 
                 ValidatePassword();
-                RaisePropertyChanged("Confirm");
             }
         }
         private SecureString _confirm;

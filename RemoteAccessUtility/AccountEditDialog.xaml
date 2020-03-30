@@ -41,14 +41,11 @@
                 </Button>
             </StackPanel>
         </StackPanel>
-        <TextBox material:HintAssist.Hint="Name"
+        <TextBox x:Name="Name"
+                 material:HintAssist.Hint="Name"
                  Text="{Binding Name}"
-                 Style="{StaticResource MaterialDesignFloatingHintTextBox}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="TextChanged">
-                    <i:InvokeCommandAction Command="{Binding NameChangedCommand}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
+                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                 TextChanged="Name_OnTextChanged">
         </TextBox>
         <TextBox x:Name="Password"
                  material:HintAssist.Hint="Password"
