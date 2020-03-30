@@ -130,7 +130,9 @@ namespace RemoteAccessUtility
             set
             {
                 SetProperty(ref _name, value);
-                AccountsSelectedItem.Name = value;
+
+                if (AccountsSelectedItem != null)
+                    AccountsSelectedItem.Name = value;
 
                 ValidateName(_name);
             }
@@ -149,7 +151,9 @@ namespace RemoteAccessUtility
                 if (password.Equals(_password))
                     return;
                 _password = password;
-                AccountsSelectedItem.Password = value;
+
+                if (AccountsSelectedItem != null)
+                    AccountsSelectedItem.Password = value;
 
                 ValidatePassword();
             }

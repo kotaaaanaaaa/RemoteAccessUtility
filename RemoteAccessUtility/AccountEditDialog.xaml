@@ -34,7 +34,7 @@
                     <material:PackIcon Kind="PlusCircleOutline" />
                 </Button>
                 <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                        Command="{Binding RemoveEnvironmentCommand}"
+                        Command="{Binding RemoveAccountCommand}"
                         Height="24" Width="24"
                         Margin="2">
                     <material:PackIcon Kind="MinusCircleOutline" />
