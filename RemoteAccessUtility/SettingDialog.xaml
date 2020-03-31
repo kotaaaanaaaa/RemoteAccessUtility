@@ -44,9 +44,9 @@
         </ObjectDataProvider>
         <ObjectDataProvider x:Key="ConnectionTypeConst"
                             MethodName="GetValues"
-                            ObjectType="{x:Type local:ConnectionTypeConst}">
+                            ObjectType="{x:Type local:ConnectionType}">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="local:ConnectionTypeConst"/>
+                <x:Type TypeName="local:ConnectionType"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <ObjectDataProvider x:Key="AuthenticationLevel"
@@ -71,7 +71,7 @@
                           material:HintAssist.Hint="Screen Mode"
                           Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                           ItemsSource="{Binding Source={StaticResource ScreenMode}}"
-                          SelectedItem="{Binding Path=Display.ScreenModeID}">
+                          SelectedItem="{Binding Display.ScreenModeId}">
                 </ComboBox>
                 <TextBox Height="40"
                          material:HintAssist.Hint="Desktop With"
@@ -88,7 +88,7 @@
                           material:HintAssist.Hint="Color Depth"
                           Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                           ItemsSource="{Binding Source={StaticResource BitPerPixel}}"
-                          SelectedItem="{Binding Path=Display.SessionBitPerPixel}"
+                          SelectedItem="{Binding Display.SessionBitPerPixel}"
                           Margin="0 5 0 5">
                 </ComboBox>
                 <CheckBox Height="20"
@@ -113,19 +113,22 @@
                           HorizontalAlignment="Left" 
                           material:HintAssist.Hint="Audio Play Mode"
                           Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                          ItemsSource="{Binding Source={StaticResource AudioPlayMode}}">
+                          ItemsSource="{Binding Source={StaticResource AudioPlayMode}}"
+                          SelectedItem="{Binding LocalResource.AudioPlayMode}">
                 </ComboBox>
                 <ComboBox Height="40"
                           HorizontalAlignment="Left" 
                           material:HintAssist.Hint="Audio Capture"
                           Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                          ItemsSource="{Binding Source={StaticResource AudioCapture}}">
+                          ItemsSource="{Binding Source={StaticResource AudioCapture}}"
+                          SelectedItem="{Binding LocalResource.AudioCaptureMode}">
                 </ComboBox>
                 <ComboBox Height="40"
                           HorizontalAlignment="Left" 
                           material:HintAssist.Hint="Keyboard Hook Mode"
                           Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                          ItemsSource="{Binding Source={StaticResource KeyboardHookMode}}">
+                          ItemsSource="{Binding Source={StaticResource KeyboardHookMode}}"
+                          SelectedItem="{Binding LocalResource.KeyboardHook}">
                 </ComboBox>
                 <CheckBox Height="20"
                           IsChecked="{Binding LocalResource.RedirectClipboard}"
@@ -142,20 +145,22 @@
                 <TextBlock Text="Other"/>
                 <TextBox Height="40"
                          material:HintAssist.Hint="Server Port"
-                         Text="{Binding Port}"
-                         Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         Text="{Binding General.ServerPort}">
                 </TextBox>
                 <ComboBox Height="40"
                           HorizontalAlignment="Left" 
                           material:HintAssist.Hint="Authentication Level"
                           Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                          ItemsSource="{Binding Source={StaticResource AuthenticationLevel}}">
+                          ItemsSource="{Binding Source={StaticResource AuthenticationLevel}}"
+                          SelectedItem="{Binding Detail.AuthenticationLevel}">
                 </ComboBox>
                 <ComboBox Height="40"
                           HorizontalAlignment="Left" 
                           material:HintAssist.Hint="Connection Type"
                           Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                          ItemsSource="{Binding Source={StaticResource ConnectionTypeConst}}">
+                          ItemsSource="{Binding Source={StaticResource ConnectionTypeConst}}"
+                          SelectedItem="{Binding Experience.ConnectionType}">
                 </ComboBox>
             </StackPanel>
         </Grid>

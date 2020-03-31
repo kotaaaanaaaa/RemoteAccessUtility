@@ -2,20 +2,37 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows.Input;
 
 namespace RemoteAccessUtility
 {
+    /// <summary>
+    /// リモートデスクトップ設定
+    /// </summary>
     public class RdpOption : RdpOptionBase
     {
+        /// <summary>
+        /// 全般設定
+        /// </summary>
         public GeneralOption General { get; }
 
+        /// <summary>
+        /// 画面
+        /// </summary>
         public DisplayOption Display { get; }
 
+        /// <summary>
+        /// ローカルリソース
+        /// </summary>
         public LocalResourceOption LocalResource { get; }
 
+        /// <summary>
+        /// エクスペリエンス
+        /// </summary>
         public ExperienceOption Experience { get; }
 
+        /// <summary>
+        /// 詳細設定
+        /// </summary>
         public DetailOption Detail { get; }
 
         public RdpOption()
@@ -29,6 +46,10 @@ namespace RemoteAccessUtility
             Detail = new DetailOption(_options);
         }
 
+        /// <summary>
+        /// RDPファイルに出力する
+        /// </summary>
+        /// <param name="filename"></param>
         public void Write(string filename)
         {
             using (var sw = new StreamWriter(filename))
@@ -77,7 +98,12 @@ namespace RemoteAccessUtility
         protected Dictionary<string, object> _options;
 
         protected List<string> Options => _options.Select(op => op.Key + op.Value).ToList();
-
+         
+        /// <summary>
+        /// 値を設定する
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         protected void Set(string key, int? value)
         {
             if (value == null)
@@ -88,6 +114,11 @@ namespace RemoteAccessUtility
             _options.Add(key + ":i:", value);
         }
 
+        /// <summary>
+        /// 値を取得する
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         protected void Get(string key, out int? value)
         {
             if (!_options.ContainsKey(key + ":i:"))
@@ -100,6 +131,11 @@ namespace RemoteAccessUtility
             value = (int)val;
         }
 
+        /// <summary>
+        /// 値を設定する
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         protected void Set(string key, string value)
         {
             if (value == null)
@@ -110,6 +146,11 @@ namespace RemoteAccessUtility
             _options.Add(key + ":s:", value);
         }
 
+        /// <summary>
+        /// 値を取得する
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         protected void Get(string key, out string value)
         {
             if (!_options.ContainsKey(key + ":s:"))
@@ -122,6 +163,11 @@ namespace RemoteAccessUtility
             value = (string)val;
         }
 
+        /// <summary>
+        /// 値を取得する
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         protected void Set(string key, byte[] value)
         {
             if (value == null)
@@ -133,6 +179,11 @@ namespace RemoteAccessUtility
             _options.Add(key + ":b:", val);
         }
 
+        /// <summary>
+        /// 値を取得する
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         protected void Get(string key, out byte[] value)
         {
             if (!_options.ContainsKey(key + ":b:"))
@@ -151,6 +202,9 @@ namespace RemoteAccessUtility
         }
     }
 
+    /// <summary>
+    /// 全般設定
+    /// </summary>
     public class GeneralOption : RdpOptionBase
     {
         public GeneralOption(Dictionary<string, object> options)
@@ -199,6 +253,9 @@ namespace RemoteAccessUtility
             set => Set("username", value);
         }
 
+        /// <summary>
+        /// パスワード
+        /// </summary>
         public string Password
         {
             get
@@ -214,6 +271,9 @@ namespace RemoteAccessUtility
         }
     }
 
+    /// <summary>
+    /// 画面設定
+    /// </summary>
     public class DisplayOption : RdpOptionBase
     {
         public DisplayOption(Dictionary<string, object> options)
@@ -237,7 +297,7 @@ namespace RemoteAccessUtility
                 Get("screen mode id", out int? val);
                 return (ScreenMode)val;
             }
-            set => Set("screen mode id", (int)value);
+            set => Set("screen mode id", (int) value);
         }
 
         /// <summary>
@@ -319,6 +379,9 @@ namespace RemoteAccessUtility
         }
     }
 
+    /// <summary>
+    /// ローカルリソース
+    /// </summary>
     public class LocalResourceOption : RdpOptionBase
     {
         public LocalResourceOption(Dictionary<string, object> options)
@@ -397,13 +460,16 @@ namespace RemoteAccessUtility
         }
     }
 
+    /// <summary>
+    /// エクスペリエンス
+    /// </summary>
     public class ExperienceOption : RdpOptionBase
     {
         public ExperienceOption(Dictionary<string, object> options)
         {
             base._options = options;
 
-            ConnectionType = ConnectionTypeConst.LowSpeed;
+            ConnectionType = ConnectionType.LowSpeed;
             BitmapCachePersistEnable = true;
             AutoReconnectionEnabled = true;
         }
@@ -411,12 +477,12 @@ namespace RemoteAccessUtility
         /// <summary>
         /// 接続品質
         /// </summary>
-        public ConnectionTypeConst ConnectionType
+        public ConnectionType ConnectionType
         {
             get
             {
                 Get("connection type", out int? val);
-                return (ConnectionTypeConst)val;
+                return (ConnectionType)val;
             }
             set => Set("connection type", (int)value);
         }
@@ -526,6 +592,9 @@ namespace RemoteAccessUtility
         }
     }
 
+    /// <summary>
+    /// 詳細設定
+    /// </summary>
     public class DetailOption : RdpOptionBase
     {
         public DetailOption(Dictionary<string, object> options)
@@ -634,7 +703,7 @@ namespace RemoteAccessUtility
         FullScreen = 2,
     }
 
-    public enum ConnectionTypeConst
+    public enum ConnectionType
     {
         /// <summary>
         /// モデム (56Kbps)
