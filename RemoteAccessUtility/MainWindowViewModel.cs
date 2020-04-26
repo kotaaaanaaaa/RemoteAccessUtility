@@ -44,9 +44,9 @@ namespace RemoteAccessUtility
 
         public void InitializeDb()
         {
-            InitialzeSetting();
-            InitialzeAccount();
-            InitialzeEnvironment();
+            InitializeSetting();
+            InitializeAccount();
+            InitializeEnvironment();
 
             SystemSetting = SelectSetting();
             SelectAccounts().ForEach(x => Accounts.Add(x));
@@ -61,7 +61,7 @@ namespace RemoteAccessUtility
             });
         }
 
-        private void InitialzeSetting()
+        private void InitializeSetting()
         {
             if (db.HasTable("setting"))
                 return;
@@ -76,7 +76,7 @@ namespace RemoteAccessUtility
             db.Upsert("setting", dic);
         }
 
-        private void InitialzeAccount()
+        private void InitializeAccount()
         {
             if (db.HasTable("account"))
                 return;
@@ -92,7 +92,7 @@ namespace RemoteAccessUtility
             db.Upsert("account", dic);
         }
 
-        private void InitialzeEnvironment()
+        private void InitializeEnvironment()
         {
             if (db.HasTable("environment"))
                 return;
