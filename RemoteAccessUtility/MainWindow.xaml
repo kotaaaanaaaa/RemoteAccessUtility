@@ -25,7 +25,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <materialDesign:DialogHost x:Name="dialogHost">
+    <materialDesign:DialogHost Identifier="DialogHost">
         <Grid>
             <DataGrid Name="EnvironmentList"
                       ItemsSource="{Binding Environments}"
@@ -83,19 +83,16 @@
                                      ToolTip="Options"
                                      Margin="0 0 10 10">
                 <StackPanel Orientation="Horizontal">
-                    <Button x:Name="EnvironmentEdit"
-                            ToolTip="Edit environment"
-                            Click="EnvironmentEdit_Click">
+                    <Button Command="{Binding EditEnvironmentsCommand}"
+                            ToolTip="Edit environment">
                         <icon:RemoteDesktopEdit/>
                     </Button>
-                    <Button x:Name="AccountEdit"
-                            ToolTip="Edit account"
-                            Click="AccountEdit_Click">
+                    <Button Command="{Binding EditAccountsCommand}"
+                            ToolTip="Edit account">
                         <icon:AccountEdit/>
                     </Button>
-                    <Button x:Name="Setting"
-                            ToolTip="Setting"
-                            Click="Setting_Click">
+                    <Button Command="{Binding SettingCommand}"
+                            ToolTip="Setting">
                         <icon:Settings/>
                     </Button>
                 </StackPanel>
