@@ -14,6 +14,7 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance local:MainWindowViewModelDesigner, IsDesignTimeCreatable=True}"
         Title="MainWindow" Height="450" Width="800">
     <Window.Resources>
         <ResourceDictionary>
@@ -27,6 +28,7 @@
     <materialDesign:DialogHost x:Name="dialogHost">
         <Grid>
             <DataGrid Name="EnvironmentList"
+                      ItemsSource="{Binding Environments}"
                       AutoGenerateColumns="False"
                       CanUserAddRows="False">
                 <DataGrid.Columns>

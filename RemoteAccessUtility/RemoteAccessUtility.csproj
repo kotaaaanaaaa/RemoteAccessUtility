@@ -84,6 +84,7 @@
     <Compile Include="Icons\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="Properties\Resources.Designer.cs" />
     <Compile Include="PropertyChangedEventHandlerExtensions.cs" />
     <Compile Include="RdpOption.cs" />

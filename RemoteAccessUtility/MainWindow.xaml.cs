@@ -1,10 +1,8 @@
 ﻿using CoreUtilitiesPack;
 using MaterialDesignThemes.Wpf;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
-using RemoteAccessUtility.Icons;
 
 namespace RemoteAccessUtility
 {
@@ -13,30 +11,30 @@ namespace RemoteAccessUtility
     /// </summary>
     public partial class MainWindow : Window
     {
-        public ObservableCollection<Environment> Environments = new ObservableCollection<Environment>();
-        public ObservableCollection<Account> Accounts = new ObservableCollection<Account>();
-        public Setting SystemSetting = new Setting();
         private static SqliteAccessor db = new SqliteAccessor();
 
         public MainWindow()
         {
             InitializeComponent();
-            EnvironmentList.ItemsSource = Environments;
-
             InitializeDb();
-            SystemSetting = SelectSetting();
-            Environment.SystemRdpOption = SystemSetting.RdpOption;
-            SelectAccounts().ForEach(x => Accounts.Add(x));
+
+            var vm = new MainWindowViewModel();
+
+            vm.SystemSetting = SelectSetting();
+            Environment.SystemRdpOption = vm.SystemSetting.RdpOption;
+            SelectAccounts().ForEach(x => vm.Accounts.Add(x));
             SelectEnvironments().ForEach(env =>
             {
-                var account = Accounts.Where(x => x.Guid == env.AccountGuid);
+                var account = vm.Accounts.Where(x => x.Guid == env.AccountGuid);
                 if (account.Any())
                 {
                     env.Account = account.First();
                 }
-                Environments.Add(env);
+                vm.Environments.Add(env);
             });
+            DataContext = vm;
         }
+
         private void InitializeDb()
         {
             InitialzeSetting();
@@ -155,27 +153,30 @@ namespace RemoteAccessUtility
 
         private async void EnvironmentEdit_Click(object sender, RoutedEventArgs e)
         {
-            var dialogView = new EnvironmentEditDialog(Environments, Accounts);
+            var vm = (MainWindowViewModel) DataContext;
+            var dialogView = new EnvironmentEditDialog(vm.Environments, vm.Accounts);
             var result = await dialogHost.ShowDialog(dialogView);
-            UpdatetEnvironments(Environments.ToList());
+            UpdatetEnvironments(vm.Environments.ToList());
         }
 
         private async void AccountEdit_Click(object sender, RoutedEventArgs e)
         {
-            var dialogView = new AccountEditDialog(Accounts);
+            var vm = (MainWindowViewModel)DataContext;
+            var dialogView = new AccountEditDialog(vm.Accounts);
             var result = await dialogHost.ShowDialog(dialogView);
-            UpdatetAccounts(Accounts.ToList());
+            UpdatetAccounts(vm.Accounts.ToList());
         }
 
         private async void Setting_Click(object sender, RoutedEventArgs e)
         {
-            var dialogView = new SettingDialog(SystemSetting);
+            var vm = (MainWindowViewModel)DataContext;
+            var dialogView = new SettingDialog(vm.SystemSetting);
             var result = await dialogHost.ShowDialog(dialogView);
             var option = result as RdpOption;
             if (option != null)
             {
-                SystemSetting.RdpOption = option;
-                Environment.SystemRdpOption = SystemSetting.RdpOption;
+                vm.SystemSetting.RdpOption = option;
+                Environment.SystemRdpOption = vm.SystemSetting.RdpOption;
             }
         }
     }
