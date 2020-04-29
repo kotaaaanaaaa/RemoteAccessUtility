@@ -25,130 +25,135 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <materialDesign:DialogHost Identifier="DialogHost">
-        <Grid>
-            <DataGrid Name="EnvironmentList"
-                      ItemsSource="{Binding Environments}"
-                      AutoGenerateColumns="False"
-                      CanUserAddRows="False"
-                      CanUserReorderColumns="False"
-                      CanUserResizeColumns="False"
-                      IsReadOnly="True">
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn>
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Command="{Binding ConnectCommand}"
-                                        ToolTip="Connect this computer"
-                                        Margin="0 -10 0 -10">
-                                    <icon:RemoteDesktop/>
-                                </Button>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTextColumn Binding="{Binding HostName}"
-                                        Header="Name"
-                                        Width="1*"
-                                        EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment"
-                                        Value="Center" />
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding ConnectionAddress}"
-                                        Header="IP Address / Host Name"
-                                        Width="180"
-                                        EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment"
-                                        Value="Center" />
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding OsType}"
-                                        Header="OS"
-                                        Width="80"
-                                        EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment"
-                                        Value="Center" />
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                    <DataGridTemplateColumn>
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Command="{Binding Path=DataContext.EditEnvironmentCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
-                                        CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
-                                        Width="24"
-                                        Height="24"
-                                        Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                                        ToolTip="change Setting this item.">
-                                    <materialDesign:PackIcon Kind="Pencil" />
-                                </Button>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn>
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Command="{Binding Path=DataContext.RemoveEnvironmentCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
-                                        CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
-                                        Width="24"
-                                        Height="24"
-                                        Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                                        ToolTip="delete this item.">
-                                    <materialDesign:PackIcon Kind="Minus" />
-                                </Button>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
-            <materialDesign:PopupBox Style="{StaticResource MaterialDesignMultiFloatingActionPopupBox}"
-                                     PlacementMode="LeftAndAlignMiddles"
-                                     UnfurlOrientation="Horizontal"
-                                     HorizontalAlignment="Right"
-                                     VerticalAlignment="Top"
-                                     Margin="0 12 56 0"
-                                     Height="24"
-                                     Width="24"
-                                     ToolTip="Options">
-                <materialDesign:PopupBox.ToggleContent>
-                    <materialDesign:PackIcon Kind="HamburgerMenu"/>
-                </materialDesign:PopupBox.ToggleContent>
-                <materialDesign:PopupBox.ToggleCheckedContent>
-                    <materialDesign:PackIcon Kind="MenuOpen"/>
-                </materialDesign:PopupBox.ToggleCheckedContent>
-                <StackPanel Orientation="Horizontal">
-                    <Button Command="{Binding EditAccountsCommand}"
-                            Width="24"
-                            Height="24" 
-                            ToolTip="Edit account">
-                        <icon:AccountEdit/>
-                    </Button>
-                    <Button Command="{Binding SettingCommand}"
-                            Width="24"
-                            Height="24" 
-                            ToolTip="Setting">
-                        <materialDesign:PackIcon Kind="Settings"/>
-                    </Button>
-                </StackPanel>
-            </materialDesign:PopupBox>
-            <Button Command="{Binding AddEnvironmentCommand}"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Top"
-                    Margin="0 12 9 0"
-                    Width="24"
-                    Height="24"
-                    Style="{StaticResource MaterialDesignIconButton}"
-                    ToolTip="add item.">
-                <materialDesign:PackIcon Kind="Plus" />
-            </Button>
-        </Grid>
-    </materialDesign:DialogHost>
+    <materialDesign:DrawerHost>
+        <materialDesign:DialogHost Identifier="DialogHost">
+            <Grid>
+                <DataGrid Name="EnvironmentList"
+                          ItemsSource="{Binding Environments}"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          CanUserReorderColumns="False"
+                          CanUserResizeColumns="False"
+                          IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding ConnectCommand}"
+                                            ToolTip="Connect this computer"
+                                            Margin="0 -10 0 -10">
+                                        <icon:RemoteDesktop/>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Binding="{Binding HostName}"
+                                            Header="Name"
+                                            Width="1*"
+                                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment"
+                                            Value="Center" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding ConnectionAddress}"
+                                            Header="IP Address / Host Name"
+                                            Width="180"
+                                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment"
+                                            Value="Center" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding OsType}"
+                                            Header="OS"
+                                            Width="80"
+                                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment"
+                                            Value="Center" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding Path=DataContext.EditEnvironmentCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
+                                            CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
+                                            Width="24"
+                                            Height="24"
+                                            Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                                            ToolTip="change Setting this item.">
+                                        <materialDesign:PackIcon Kind="Pencil" />
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding Path=DataContext.RemoveEnvironmentCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
+                                            CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
+                                            Width="24"
+                                            Height="24"
+                                            Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                                            ToolTip="delete this item.">
+                                        <materialDesign:PackIcon Kind="Minus" />
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Button Style="{StaticResource MaterialDesignIconButton}"
+                        Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"
+                        CommandParameter="{x:Static Dock.Top}"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Margin="30 12 0 0"
+                        Height="24"
+                        Width="24"
+                        ToolTip="Options">
+                    <materialDesign:PackIcon Kind="DotsVertical" />
+                </Button>
+                <Button Command="{Binding AddEnvironmentCommand}"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Margin="0 12 9 0"
+                        Width="24"
+                        Height="24"
+                        Style="{StaticResource MaterialDesignIconButton}"
+                        ToolTip="add item.">
+                    <materialDesign:PackIcon Kind="Plus" />
+                </Button>
+            </Grid>
+        </materialDesign:DialogHost>
+        <materialDesign:DrawerHost.TopDrawerContent>
+            <StackPanel HorizontalAlignment="Center"
+                        Orientation="Horizontal"
+                        Margin="16">
+                <Button Command="{Binding EditAccountsCommand}"
+                        Margin="4"
+                        ToolTip="Edit account">
+                    <icon:AccountEdit/>
+                </Button>
+                <Button Command="{Binding SettingCommand}"
+                        Margin="4"
+                        ToolTip="Setting">
+                    <materialDesign:PackIcon Kind="Settings"/>
+                </Button>
+                <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"
+                        Margin="4"
+                        Style="{StaticResource MaterialDesignIconButton}"
+                        ToolTip="Close">
+                    <materialDesign:PackIcon Kind="Close"/>
+                </Button>
+            </StackPanel>
+        </materialDesign:DrawerHost.TopDrawerContent>
+    </materialDesign:DrawerHost>
 </Window>
