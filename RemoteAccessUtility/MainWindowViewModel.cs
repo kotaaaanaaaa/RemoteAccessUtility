@@ -73,15 +73,16 @@ namespace RemoteAccessUtility
             var vm = new EnvironmentEditDialogViewModel(item, Accounts);
             var dialog = new EnvironmentEditDialog();
             dialog.DataContext = vm;
-            var result = await DialogHost.Show(dialog, "DialogHost");
+            var isSaved = (bool)await DialogHost.Show(dialog, "DialogHost");
 
-            if (Environments.Contains(item))
+            //refresh
+            if (isSaved && Environments.Contains(item))
             {
                 var index = Environments.IndexOf(item);
                 Environments.Remove(item);
                 Environments.Insert(index, item);
             }
-            else
+            else if (isSaved)
             {
                 Environments.Add(item);
             }

@@ -40,7 +40,7 @@
                             <DataTemplate>
                                 <Button Command="{Binding ConnectCommand}"
                                         ToolTip="Connect this computer"
-                                        Margin ="0,-10,0,-10">
+                                        Margin="0 -10 0 -10">
                                     <icon:RemoteDesktop/>
                                 </Button>
                             </DataTemplate>
@@ -82,7 +82,7 @@
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Command ="{Binding Path=DataContext.EditEnvironmentCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
+                                <Button Command="{Binding Path=DataContext.EditEnvironmentCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
                                         CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
                                         Width="24"
                                         Height="24"
@@ -96,7 +96,7 @@
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Command ="{Binding Path=DataContext.RemoveEnvironmentCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
+                                <Button Command="{Binding Path=DataContext.RemoveEnvironmentCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
                                         CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
                                         Width="24"
                                         Height="24"
@@ -109,34 +109,46 @@
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
-            <Button Command ="{Binding AddEnvironmentCommand}"
+            <materialDesign:PopupBox Style="{StaticResource MaterialDesignMultiFloatingActionPopupBox}"
+                                     PlacementMode="LeftAndAlignMiddles"
+                                     UnfurlOrientation="Horizontal"
+                                     HorizontalAlignment="Right"
+                                     VerticalAlignment="Top"
+                                     Margin="0 12 56 0"
+                                     Height="24"
+                                     Width="24"
+                                     ToolTip="Options">
+                <materialDesign:PopupBox.ToggleContent>
+                    <materialDesign:PackIcon Kind="HamburgerMenu"/>
+                </materialDesign:PopupBox.ToggleContent>
+                <materialDesign:PopupBox.ToggleCheckedContent>
+                    <materialDesign:PackIcon Kind="MenuOpen"/>
+                </materialDesign:PopupBox.ToggleCheckedContent>
+                <StackPanel Orientation="Horizontal">
+                    <Button Command="{Binding EditAccountsCommand}"
+                            Width="24"
+                            Height="24" 
+                            ToolTip="Edit account">
+                        <icon:AccountEdit/>
+                    </Button>
+                    <Button Command="{Binding SettingCommand}"
+                            Width="24"
+                            Height="24" 
+                            ToolTip="Setting">
+                        <materialDesign:PackIcon Kind="Settings"/>
+                    </Button>
+                </StackPanel>
+            </materialDesign:PopupBox>
+            <Button Command="{Binding AddEnvironmentCommand}"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Top"
-                    Margin="0,12,9,0"
+                    Margin="0 12 9 0"
                     Width="24"
                     Height="24"
                     Style="{StaticResource MaterialDesignIconButton}"
                     ToolTip="add item.">
                 <materialDesign:PackIcon Kind="Plus" />
             </Button>
-            <materialDesign:PopupBox Style="{StaticResource MaterialDesignMultiFloatingActionPopupBox}"
-                                     PlacementMode="LeftAndAlignMiddles"
-                                     UnfurlOrientation="Horizontal"
-                                     HorizontalAlignment="Right"
-                                     VerticalAlignment="Bottom"
-                                     ToolTip="Options"
-                                     Margin="0 0 10 10">
-                <StackPanel Orientation="Horizontal">
-                    <Button Command="{Binding EditAccountsCommand}"
-                            ToolTip="Edit account">
-                        <icon:AccountEdit/>
-                    </Button>
-                    <Button Command="{Binding SettingCommand}"
-                            ToolTip="Setting">
-                        <icon:Settings/>
-                    </Button>
-                </StackPanel>
-            </materialDesign:PopupBox>
         </Grid>
     </materialDesign:DialogHost>
 </Window>

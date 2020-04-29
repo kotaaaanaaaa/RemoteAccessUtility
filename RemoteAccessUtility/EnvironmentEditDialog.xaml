@@ -82,7 +82,8 @@
                     Command="{Binding SaveClickCommand}"/>
             <Button Content="Close"
                     Style="{DynamicResource MaterialDesignFlatButton}"
-                    Command="{x:Static material:DialogHost.CloseDialogCommand}" />
+                    Command="{x:Static material:DialogHost.CloseDialogCommand}"
+                    CommandParameter="{Binding IsSaved}"/>
         </StackPanel>
     </Grid>
 </UserControl>

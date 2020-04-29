@@ -246,9 +246,20 @@ namespace RemoteAccessUtility
         /// </summary>
         private void SaveClick()
         {
+            IsSaved = true;
             DbAccessor.DeleteEnvironment(nowEnv);
             DbAccessor.UpsertEnvironment(newEnv);
         }
         public DelegateCommand SaveClickCommand { get; set; }
+
+        /// <summary>
+        /// 保存有無を取得する
+        /// </summary>
+        public bool IsSaved
+        {
+            get => isSaved;
+            set => SetProperty(ref isSaved, value);
+        }
+        private bool isSaved = false;
     }
 }
