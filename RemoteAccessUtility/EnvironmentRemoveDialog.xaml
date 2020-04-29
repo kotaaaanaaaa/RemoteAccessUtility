@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="RemoteAccessUtility.EnvironmentRemoveDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RemoteAccessUtility"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <RichTextBox  Grid.Row="0" Grid.Column="0"
+                      IsReadOnly="True"
+                      Width="180">
+            <FlowDocument>
+                <Paragraph>This action
+                    <Span Foreground="Red">cannot</Span> be undone
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
+        <StackPanel Grid.Row="1" Grid.Column="0"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+            <Button Content="Remove"
+                    Style="{DynamicResource MaterialDesignFlatButton}"
+                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
+                <Button.CommandParameter>
+                    <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
+                        True
+                    </system:Boolean>
+                </Button.CommandParameter>
+            </Button>
+            <Button Content="Close"
+                    Style="{DynamicResource MaterialDesignFlatButton}"
+                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
+                <Button.CommandParameter>
+                    <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
+                        False
+                    </system:Boolean>
+                </Button.CommandParameter>
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -356,16 +356,16 @@ namespace RemoteAccessUtility
         /// </summary>
         private void SaveClick()
         {
-            Source.Clear();
-            foreach (var account in Accounts)
-            {
-                Source.Add(new Account
-                {
-                    Name = account.Name,
-                    Password = account.Password,
-                    Guid = account.Guid,
-                });
-            }
+            //Source.Clear();
+            //foreach (var account in Accounts)
+            //{
+            //    Source.Add(new Account
+            //    {
+            //        Name = account.Name,
+            //        Password = account.Password,
+            //        Guid = account.Guid,
+            //    });
+            //}
         }
     }
 }

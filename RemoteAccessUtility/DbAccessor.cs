@@ -99,21 +99,27 @@ namespace RemoteAccessUtility
             db.Upserts("account", upserts);
         }
 
-        public static void UpdatetEnvironments(List<Environment> environments)
+        public static void UpsertEnvironment(Environment environment)
         {
-            var target = SelectEnvironments();
-            foreach (var environment in environments)
-            {
-                if (target.Contains(environment))
-                {
-                    target.Remove(environment);
-                }
-            }
-            db.ToDictionaries(target, out var deletes);
-            db.Delete("environment", deletes);
+            db.ToDictionary(environment, out var upsert);
+            db.Upsert("environment", upsert);
+        }
 
-            db.ToDictionaries(environments, out var upserts);
-            db.Upserts("environment", upserts);
+        public static void DeleteEnvironment(Environment environment)
+        {
+            var environments = new List<Environment>()
+            {
+                environment,
+            };
+            db.ToDictionaries(environments, out var deletes);
+            db.Delete("environment", deletes);
+        }
+
+        public static Environment Copy(Environment env)
+        {
+            db.ToDictionary(env, out var item);
+            db.ToRecord(item, out Environment result);
+            return result;
         }
     }
 }

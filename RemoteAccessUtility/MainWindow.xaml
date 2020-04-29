@@ -30,7 +30,10 @@
             <DataGrid Name="EnvironmentList"
                       ItemsSource="{Binding Environments}"
                       AutoGenerateColumns="False"
-                      CanUserAddRows="False">
+                      CanUserAddRows="False"
+                      CanUserReorderColumns="False"
+                      CanUserResizeColumns="False"
+                      IsReadOnly="True">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
@@ -45,6 +48,7 @@
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Binding="{Binding HostName}"
                                         Header="Name"
+                                        Width="1*"
                                         EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
@@ -55,6 +59,7 @@
                     </DataGridTextColumn>
                     <DataGridTextColumn Binding="{Binding ConnectionAddress}"
                                         Header="IP Address / Host Name"
+                                        Width="180"
                                         EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
@@ -65,6 +70,7 @@
                     </DataGridTextColumn>
                     <DataGridTextColumn Binding="{Binding OsType}"
                                         Header="OS"
+                                        Width="80"
                                         EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
@@ -73,8 +79,46 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Command ="{Binding Path=DataContext.EditEnvironmentCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
+                                        CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
+                                        Width="24"
+                                        Height="24"
+                                        Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                                        ToolTip="change Setting this item.">
+                                    <materialDesign:PackIcon Kind="Pencil" />
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Command ="{Binding Path=DataContext.RemoveEnvironmentCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
+                                        CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
+                                        Width="24"
+                                        Height="24"
+                                        Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                                        ToolTip="delete this item.">
+                                    <materialDesign:PackIcon Kind="Minus" />
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
+            <Button Command ="{Binding AddEnvironmentCommand}"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Margin="0,12,9,0"
+                    Width="24"
+                    Height="24"
+                    Style="{StaticResource MaterialDesignIconButton}"
+                    ToolTip="add item.">
+                <materialDesign:PackIcon Kind="Plus" />
+            </Button>
             <materialDesign:PopupBox Style="{StaticResource MaterialDesignMultiFloatingActionPopupBox}"
                                      PlacementMode="LeftAndAlignMiddles"
                                      UnfurlOrientation="Horizontal"
@@ -83,10 +127,6 @@
                                      ToolTip="Options"
                                      Margin="0 0 10 10">
                 <StackPanel Orientation="Horizontal">
-                    <Button Command="{Binding EditEnvironmentsCommand}"
-                            ToolTip="Edit environment">
-                        <icon:RemoteDesktopEdit/>
-                    </Button>
                     <Button Command="{Binding EditAccountsCommand}"
                             ToolTip="Edit account">
                         <icon:AccountEdit/>

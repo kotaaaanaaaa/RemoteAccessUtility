@@ -30,25 +30,10 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <ComboBox x:Name ="EnvironmentsList"
-                  Grid.Row="0" Grid.Column="0" VerticalAlignment="Bottom"
-                  Height="40"
-                  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                  ItemsSource="{Binding Environments}"
-                  SelectedItem="{Binding EnvironmentsSelectedItem}"
-                  SelectedIndex="{Binding EnvironmentsSelectedIndex}"
-                  DisplayMemberPath="HostName"
-                  Margin="0 0 5 0">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="SelectionChanged">
-                    <i:InvokeCommandAction Command="{Binding EnvironmentChangedCommand}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </ComboBox>
-        <TextBox Grid.Row="1" Grid.Column="0" VerticalAlignment="Bottom"
+        <TextBox Grid.Row="0" Grid.Column="0" VerticalAlignment="Bottom"
                  material:HintAssist.Hint="Name"
                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                 Text="{Binding HostName, Mode=TwoWay}"
+                 Text="{Binding HostName}"
                  Margin="0 0 5 0">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="TextChanged">
@@ -56,7 +41,7 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </TextBox>
-        <TextBox Grid.Row="2" Grid.Column="0" VerticalAlignment="Bottom"
+        <TextBox Grid.Row="1" Grid.Column="0" VerticalAlignment="Bottom"
                  material:HintAssist.Hint="IP Address / Host Name"
                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                  Text="{Binding ConnectionAddress}"
@@ -67,7 +52,7 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </TextBox>
-        <ComboBox Grid.Row="3" Grid.Column="0" VerticalAlignment="Bottom"
+        <ComboBox Grid.Row="2" Grid.Column="0" VerticalAlignment="Bottom"
                   HorizontalAlignment="Left" 
                   material:HintAssist.Hint="OS"
                   Style="{StaticResource MaterialDesignFloatingHintComboBox}"
@@ -75,36 +60,13 @@
                   SelectedItem="{Binding OsType}"
                   Margin="0 0 5 0">
         </ComboBox>
-        <StackPanel Grid.Row="0" Grid.Column="1"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Left"
-                    Width="60"
-                    Margin="5 0 0 0">
-            <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                    IsEnabled="{Binding CanSave}"
-                    Command="{Binding AddEnvironmentCommand}"
-                    Height="24"
-                    Width="24"
-                    Margin="2">
-                <material:PackIcon Kind="PlusCircleOutline" />
-            </Button>
-            <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                    Command="{Binding RemoveEnvironmentCommand}"
-                    Height="24"
-                    Width="24"
-                    Margin="2">
-                <material:PackIcon Kind="MinusCircleOutline" />
-            </Button>
-        </StackPanel>
-        <ComboBox x:Name ="AccountsList"
-                  Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom"
+        <ComboBox Grid.Row="3" Grid.Column="0" VerticalAlignment="Bottom"
                   material:HintAssist.Hint="Account"
                   Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                   ItemsSource="{Binding Accounts}"
-                  SelectedItem="{Binding AccountsSelectedItem}"
                   SelectedIndex="{Binding AccountsSelectedIndex}"
                   DisplayMemberPath="Name"
-                  Margin="5 0 0 0">
+                  Margin="0 0 5 0">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
                     <i:InvokeCommandAction Command="{Binding AccountChangedCommand}"/>

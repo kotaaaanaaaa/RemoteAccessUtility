@@ -3,11 +3,11 @@
 namespace RemoteAccessUtility
 {
     /// <summary>
-    /// EnvironmentEditDialog.xaml の相互作用ロジック
+    /// EnvironmentRemoveDialog.xaml の相互作用ロジック
     /// </summary>
-    public partial class EnvironmentEditDialog : UserControl
+    public partial class EnvironmentRemoveDialog : UserControl
     {
-        public EnvironmentEditDialog()
+        public EnvironmentRemoveDialog()
         {
             InitializeComponent();
         }

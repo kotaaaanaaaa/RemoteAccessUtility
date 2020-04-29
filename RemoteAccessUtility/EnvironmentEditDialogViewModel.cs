@@ -3,7 +3,6 @@ using Prism.Mvvm;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
@@ -12,64 +11,27 @@ namespace RemoteAccessUtility
 {
     public class EnvironmentEditDialogViewModel : BindableBase
     {
-        public ObservableCollection<Environment> Source { get; set; }
+        private Environment nowEnv = new Environment();
+        private Environment newEnv;
 
-        public EnvironmentEditDialogViewModel()
+        public EnvironmentEditDialogViewModel(Environment item, IEnumerable<Account> accounts)
         {
+            nowEnv = DbAccessor.Copy(item);
+            newEnv = item;
+            Accounts = accounts;
+
             ValidateHostName();
             ValidateConnectionAddress();
 
-            AddEnvironmentCommand = new DelegateCommand(AddEnvironment, () => CanSave);
-            RemoveEnvironmentCommand = new DelegateCommand(RemoveEnvironment);
-            EnvironmentChangedCommand = new DelegateCommand(EnvironmentChanged);
+            HostNameChangedCommand = new DelegateCommand(() => ValidateHostName());
+            ConnectionAddressChangedCommand = new DelegateCommand(() => ValidateConnectionAddress());
             AccountChangedCommand = new DelegateCommand(AccountChanged);
-            HostNameChangedCommand = new DelegateCommand(HostNameChanged);
-            ConnectionAddressChangedCommand = new DelegateCommand(ConnectionAddressChanged);
             SaveClickCommand = new DelegateCommand(SaveClick);
-        }
 
-        #region Environments
-
-        public ObservableCollection<Environment> Environments
-        {
-            get => _environments;
-            set => SetProperty(ref _environments, value);
-        }
-        public ObservableCollection<Environment> _environments;
-
-        public Environment EnvironmentsSelectedItem
-        {
-            get => _environmentsSelected;
-            set
+            var account = Accounts.FirstOrDefault(x => x.Guid == item.AccountGuid);
+            if (account != null)
             {
-                SetProperty(ref _environmentsSelected, value);
-                RaisePropertyChanged("HostName");
-                RaisePropertyChanged("ConnectionAddress");
-                RaisePropertyChanged("OsType");
-                RaisePropertyChanged("AccountGuid");
-
-                ValidateHostName();
-                ValidateConnectionAddress();
-            }
-        }
-        private Environment _environmentsSelected;
-
-        public int EnvironmentsSelectedIndex
-        {
-            get => _environmentsSelectedIndex;
-            set => SetProperty(ref _environmentsSelectedIndex, value);
-        }
-
-        private int _environmentsSelectedIndex;
-
-        public DelegateCommand EnvironmentChangedCommand { get; set; }
-
-        private void EnvironmentChanged()
-        {
-            var account = Accounts.Where(x => x.Guid == EnvironmentsSelectedItem.AccountGuid);
-            if (account.Any())
-            {
-                AccountsSelectedItem = account.First();
+                AccountsSelectedItem = account;
             }
             else
             {
@@ -77,25 +39,53 @@ namespace RemoteAccessUtility
             }
         }
 
-        public DelegateCommand AddEnvironmentCommand { get; set; }
-
-        private void AddEnvironment()
+        /// <summary>
+        /// ホスト名(表示用)
+        /// </summary>
+        public string HostName
         {
-            var env = new Environment();
-            Environments.Add(env);
+            get => newEnv.HostName;
+            set
+            {
+                var hostName = newEnv.HostName;
+                SetProperty(ref hostName, value);
+                newEnv.HostName = hostName;
+                ValidateHostName();
+            }
         }
 
-        public DelegateCommand RemoveEnvironmentCommand { get; set; }
+        public DelegateCommand HostNameChangedCommand { get; set; }
 
-        private void RemoveEnvironment()
+        /// <summary>
+        /// RDP接続先アドレス
+        /// </summary>
+        public string ConnectionAddress
         {
-            var env = EnvironmentsSelectedItem;
-            EnvironmentsSelectedIndex = -1;
-            Environments.Remove(env);
-            EnvironmentsSelectedIndex = 0;
+            get => newEnv.ConnectionAddress;
+            set
+            {
+                var address = newEnv.ConnectionAddress;
+                SetProperty(ref address, value);
+                newEnv.ConnectionAddress = address;
+                ValidateConnectionAddress();
+            }
         }
 
-        #endregion
+        public DelegateCommand ConnectionAddressChangedCommand { get; set; }
+
+        /// <summary>
+        /// OSの種類
+        /// </summary>
+        public OperatingSystemType OsType
+        {
+            get => newEnv.OsType;
+            set
+            {
+                var osType = newEnv.OsType;
+                SetProperty(ref osType, value);
+                newEnv.OsType = osType;
+            }
+        }
 
         #region Accounts
 
@@ -103,14 +93,18 @@ namespace RemoteAccessUtility
 
         public Account AccountsSelectedItem
         {
-            get => _accountsSelected;
+            get => Accounts.ElementAt(AccountsSelectedIndex);
             set
             {
-                SetProperty(ref _accountsSelected, value);
-                RaisePropertyChanged("Accounts");
+                var index = -1;
+                var list = Accounts.ToList();
+                if (list.Contains(value))
+                {
+                    index = list.IndexOf(value);
+                }
+                AccountsSelectedIndex = index;
             }
         }
-        private Account _accountsSelected = new Account();
 
         public int AccountsSelectedIndex
         {
@@ -119,86 +113,22 @@ namespace RemoteAccessUtility
         }
         private int _accountsSelectedIndex;
 
-        public DelegateCommand AccountChangedCommand { get; set; }
-
         private void AccountChanged()
         {
-            AccountGuid = _accountsSelected.Guid;
+            AccountGuid = AccountsSelectedItem.Guid;
         }
-
-        #endregion
-
-        /// <summary>
-        /// ホスト名(表示用)
-        /// </summary>
-        public string HostName
-        {
-            get => EnvironmentsSelectedItem != null ? EnvironmentsSelectedItem.HostName : string.Empty;
-            set
-            {
-                var hostName = EnvironmentsSelectedItem.HostName;
-                SetProperty(ref hostName, value);
-                EnvironmentsSelectedItem.HostName = hostName;
-                ValidateHostName();
-            }
-        }
-
-        public DelegateCommand HostNameChangedCommand { get; set; }
-
-        private void HostNameChanged()
-        {
-            ValidateHostName();
-        }
-
-        /// <summary>
-        /// RDP接続先アドレス
-        /// </summary>
-        public string ConnectionAddress
-        {
-            get => EnvironmentsSelectedItem != null ? EnvironmentsSelectedItem.ConnectionAddress : string.Empty;
-            set
-            {
-                var address = EnvironmentsSelectedItem.ConnectionAddress;
-                SetProperty(ref address, value);
-                EnvironmentsSelectedItem.ConnectionAddress = address;
-                ValidateConnectionAddress();
-            }
-        }
-
-        public DelegateCommand ConnectionAddressChangedCommand { get; set; }
-
-        private void ConnectionAddressChanged()
-        {
-            ValidateConnectionAddress();
-        }
-
-        /// <summary>
-        /// OSの種類
-        /// </summary>
-        public OperatingSystemType OsType
-        {
-            get => EnvironmentsSelectedItem?.OsType ?? OperatingSystemType.UnKnown;
-            set
-            {
-                var osType = EnvironmentsSelectedItem.OsType;
-                SetProperty(ref osType, value);
-                EnvironmentsSelectedItem.OsType = osType;
-            }
-        }
+        public DelegateCommand AccountChangedCommand { get; set; }
 
         /// <summary>
         /// アカウントのGuid
         /// </summary>
-        public string AccountGuid
+        private string AccountGuid
         {
-            get => EnvironmentsSelectedItem != null ? EnvironmentsSelectedItem.AccountGuid : string.Empty;
-            set
-            {
-                var guid = EnvironmentsSelectedItem.AccountGuid;
-                SetProperty(ref guid, value);
-                EnvironmentsSelectedItem.AccountGuid = guid;
-            }
+            get => newEnv.AccountGuid ?? string.Empty;
+            set => newEnv.AccountGuid = value;
         }
+
+        #endregion
 
         /// <summary>
         /// 保存可否を取得する
@@ -311,26 +241,14 @@ namespace RemoteAccessUtility
 
         #endregion
 
-        public DelegateCommand SaveClickCommand { get; set; }
-
         /// <summary>
         /// ダイアログの内容を保存する
         /// </summary>
         private void SaveClick()
         {
-            Source.Clear();
-
-            foreach (var env in Environments)
-            {
-                Source.Add(new Environment()
-                {
-                    HostName = env.HostName,
-                    ConnectionAddress = env.ConnectionAddress,
-                    OsType = env.OsType,
-                    AccountGuid = env.AccountGuid,
-                    Account = Accounts.First(x => env.AccountGuid.Equals(x.Guid)),
-                });
-            }
+            DbAccessor.DeleteEnvironment(nowEnv);
+            DbAccessor.UpsertEnvironment(newEnv);
         }
+        public DelegateCommand SaveClickCommand { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using Prism.Mvvm;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace RemoteAccessUtility
@@ -12,8 +13,11 @@ namespace RemoteAccessUtility
     {
         public MainWindowViewModel()
         {
+            AddEnvironmentCommand = new DelegateCommand(async () => await AddEnvironment());
+            EditEnvironmentCommand = new DelegateCommand<Environment>(async item => await EditEnvironment(item));
+            RemoveEnvironmentCommand = new DelegateCommand<Environment>(async item => await RemoveEnvironment(item));
+
             SettingCommand = new DelegateCommand(async () => await Setting());
-            EditEnvironmentsCommand = new DelegateCommand(async () => await EditEnvironments());
             EditAccountsCommand = new DelegateCommand(async () => await EditAccounts());
         }
 
@@ -57,15 +61,47 @@ namespace RemoteAccessUtility
             });
         }
 
-        
-
-        private async Task EditEnvironments()
+        private async Task AddEnvironment()
         {
-            var dialogView = new EnvironmentEditDialog(Environments, Accounts);
-            var result = await DialogHost.Show(dialogView, "DialogHost");
-            DbAccessor.UpdatetEnvironments(Environments.ToList());
+            var item = new Environment();
+            await EditEnvironment(item);
         }
-        public DelegateCommand EditEnvironmentsCommand { get; set; }
+        public DelegateCommand AddEnvironmentCommand { get; set; }
+
+        private async Task EditEnvironment(Environment item)
+        {
+            var vm = new EnvironmentEditDialogViewModel(item, Accounts);
+            var dialog = new EnvironmentEditDialog();
+            dialog.DataContext = vm;
+            var result = await DialogHost.Show(dialog, "DialogHost");
+
+            if (Environments.Contains(item))
+            {
+                var index = Environments.IndexOf(item);
+                Environments.Remove(item);
+                Environments.Insert(index, item);
+            }
+            else
+            {
+                Environments.Add(item);
+            }
+        }
+        public DelegateCommand<Environment> EditEnvironmentCommand { get; set; }
+
+        private async Task RemoveEnvironment(Environment item)
+        {
+            var vm = new EnvironmentEditDialogViewModel(item, Accounts);
+            var dialog = new EnvironmentRemoveDialog();
+            dialog.DataContext = vm;
+            var result = (bool)await DialogHost.Show(dialog, "DialogHost");
+
+            if (result)
+            {
+                DbAccessor.DeleteEnvironment(item);
+                Environments.Remove(item);
+            }
+        }
+        public DelegateCommand<Environment> RemoveEnvironmentCommand { get; set; }
 
         private async Task EditAccounts()
         {
@@ -87,8 +123,6 @@ namespace RemoteAccessUtility
             }
         }
         public DelegateCommand SettingCommand { get; set; }
-
-
     }
 
     [Obsolete(null, true)]
