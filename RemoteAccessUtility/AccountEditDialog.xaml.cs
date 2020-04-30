@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 using TextBox = System.Windows.Controls.TextBox;
 using UserControl = System.Windows.Controls.UserControl;
@@ -15,22 +12,17 @@ namespace RemoteAccessUtility
     /// </summary>
     public partial class AccountEditDialog : UserControl
     {
-        private ViewModel vm = new ViewModel();
         private Guid PasswordMaskingGuid;
         private Guid ConfirmMaskingGuid;
 
-        public AccountEditDialog(ObservableCollection<Account> srcs)
+        public AccountEditDialog()
         {
-            var accounts = new ObservableCollection<Account>();
-            srcs.ToList()
-                .ForEach(x => accounts.Add(new Account(x)));
-
-            vm.Source = srcs;
-            vm.Accounts = accounts;
-
             InitializeComponent();
-            DataContext = vm;
-            vm.AccountsSelectedIndex = 0;
+        }
+
+        private ViewModel Vm
+        {
+            get => (ViewModel) DataContext;
         }
 
         /// <summary>
@@ -40,7 +32,7 @@ namespace RemoteAccessUtility
         /// <param name="e"></param>
         private async void Name_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            vm.Name = Name.Text;
+            Vm.Name = Name.Text;
         }
 
         /// <summary>
@@ -50,7 +42,7 @@ namespace RemoteAccessUtility
         /// <param name="e"></param>
         private async void Password_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            var nowText = vm.Password;
+            var nowText = Vm.Password;
             var newText = ViewModel.UnMask(Password.Text, nowText);
 
             //マスク時に再処理させない
@@ -59,13 +51,13 @@ namespace RemoteAccessUtility
 
             var newGuid = Guid.NewGuid();
             PasswordMaskingGuid = newGuid;
-            vm.Password = newText;
-            vm.ValidatePassword();
+            Vm.Password = newText;
+            Vm.ValidatePassword();
 
             //削除時はマスクのみ
             if (nowText.IndexOf(newText) == 0)
             {
-                Mask(Password, vm.Password, true);
+                Mask(Password, Vm.Password, true);
                 return;
             }
 
@@ -74,7 +66,7 @@ namespace RemoteAccessUtility
             await Task.Delay(1000);
             if (!newGuid.Equals(PasswordMaskingGuid))
                 return;
-            Mask(Password, vm.Password, true);
+            Mask(Password, Vm.Password, true);
         }
 
         /// <summary>
@@ -84,7 +76,7 @@ namespace RemoteAccessUtility
         /// <param name="e"></param>
         private async void Confirm_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            var nowText = vm.Confirm;
+            var nowText = Vm.Confirm;
             var newText = ViewModel.UnMask(Confirm.Text, nowText);
 
             //マスク時に再処理させない
@@ -93,8 +85,8 @@ namespace RemoteAccessUtility
 
             var newGuid = Guid.NewGuid();
             ConfirmMaskingGuid = newGuid;
-            vm.Confirm = newText;
-            vm.ValidatePassword();
+            Vm.Confirm = newText;
+            Vm.ValidatePassword();
 
             //削除時はマスクのみ
             if (nowText.IndexOf(newText) == 0)

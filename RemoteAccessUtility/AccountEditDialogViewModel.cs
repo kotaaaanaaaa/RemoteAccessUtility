@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Security;
@@ -18,14 +18,21 @@ namespace RemoteAccessUtility
 
         public static readonly char MaskChar = '●';
 
-
-        public AccountEditDialogViewModel()
+        public AccountEditDialogViewModel(ObservableCollection<Account> accounts = null)
         {
+            if (accounts != null)
+            {
+                Source = accounts;
+                Accounts = new ObservableCollection<Account>();
+                Source.ToList()
+                    .ForEach(x => Accounts.Add(x));
+            }
+
             ValidateName();
             ValidatePassword();
 
             AddAccountCommand = new DelegateCommand(AddAccount, () => CanSave);
-            RemoveAccountCommand = new DelegateCommand(RemoveAccount);
+            RemoveAccountCommand = new DelegateCommand<Account>(item => RemoveAccount(item));
             AccountsChangedCommand = new DelegateCommand(AccountsChanged);
             SaveClickCommand = new DelegateCommand(SaveClick, () => CanSave);
         }
@@ -39,15 +46,25 @@ namespace RemoteAccessUtility
 
         public Account AccountsSelectedItem
         {
-            get => _accountsSelectedItem;
+            get
+            {
+                if (AccountsSelectedIndex == -1)
+                {
+                    return null;
+                }
+                return Accounts.ElementAt(AccountsSelectedIndex);
+            }
             set
             {
-                SetProperty(ref _accountsSelectedItem, value);
-                _accountsSelectedIndex = Accounts.IndexOf(value);
-                AccountsChanged();
+                var index = -1;
+                var list = Accounts.ToList();
+                if (list.Contains(value))
+                {
+                    index = list.IndexOf(value);
+                }
+                AccountsSelectedIndex = index;
             }
         }
-        private Account _accountsSelectedItem;
 
         public int AccountsSelectedIndex
         {
@@ -55,23 +72,10 @@ namespace RemoteAccessUtility
             set
             {
                 SetProperty(ref _accountsSelectedIndex, value);
-                if (Accounts == null)
-                    return;
-                if (value <= -1 || Accounts.Count <= value)
-                {
-                    _accountsSelectedItem = null;
-                }
-                else
-                {
-                    _accountsSelectedItem = Accounts[value];
-                }
                 AccountsChanged();
             }
         }
         private int _accountsSelectedIndex;
-
-
-        public DelegateCommand AccountsChangedCommand { get; set; }
 
         /// <summary>
         /// アカウントの選択変更時
@@ -95,8 +99,7 @@ namespace RemoteAccessUtility
                 DisplayConfirm = Mask(Confirm);
             }
         }
-
-        public DelegateCommand AddAccountCommand { get; set; }
+        public DelegateCommand AccountsChangedCommand { get; set; }
 
         /// <summary>
         /// アカウントを追加する
@@ -107,19 +110,18 @@ namespace RemoteAccessUtility
             Accounts.Add(account);
             AccountsSelectedItem = account;
         }
-
-        public DelegateCommand RemoveAccountCommand { get; set; }
+        public DelegateCommand AddAccountCommand { get; set; }
 
         /// <summary>
         /// アカウントを削除する
         /// </summary>
-        private void RemoveAccount()
+        private void RemoveAccount(Account item)
         {
-            var account = AccountsSelectedItem;
             AccountsSelectedIndex = -1;
-            Accounts.Remove(account);
+            Accounts.Remove(item);
             AccountsSelectedIndex = 0;
         }
+        public DelegateCommand<Account> RemoveAccountCommand { get; set; }
 
         /// <summary>
         /// ユーザー名
@@ -349,23 +351,61 @@ namespace RemoteAccessUtility
 
         #endregion
 
-        public DelegateCommand SaveClickCommand { get; set; }
 
         /// <summary>
         /// ダイアログの内容を保存する
         /// </summary>
         private void SaveClick()
         {
-            //Source.Clear();
-            //foreach (var account in Accounts)
-            //{
-            //    Source.Add(new Account
-            //    {
-            //        Name = account.Name,
-            //        Password = account.Password,
-            //        Guid = account.Guid,
-            //    });
-            //}
+            var item = AccountsSelectedItem;
+            var index = Accounts.IndexOf(item);
+            Accounts.Remove(item);
+            Accounts.Insert(index, item);
+
+            var sourceItem = Source.FirstOrDefault(x => x.Guid == item.Guid);
+            if (sourceItem != null)
+            {
+                index = Source.IndexOf(sourceItem);
+                Source.Remove(sourceItem);
+                Source.Insert(index, sourceItem);
+            }
+            else
+            {
+                Source.Add(item);
+            }
+            DbAccessor.UpsertAccount(item);
+
+        }
+        public DelegateCommand SaveClickCommand { get; set; }
+    }
+
+    [Obsolete(null, true)]
+    public class AccountEditDialogViewModelDesigner : AccountEditDialogViewModel
+    {
+        public AccountEditDialogViewModelDesigner()
+        {
+            Accounts = new ObservableCollection<Account>
+            {
+                new Account
+                {
+                    Name = "Administrator",
+                    Password = "Password",
+                    Guid = new Account().Guid,
+                },
+                new Account
+                {
+                    Name = "User",
+                    Password = "Password",
+                    Guid = new Account().Guid,
+                },
+                new Account
+                {
+                    Name = "User2",
+                    Password = "Password",
+                    Guid = new Account().Guid,
+                },
+            };
+            AccountsSelectedIndex = 0;
         }
     }
 }

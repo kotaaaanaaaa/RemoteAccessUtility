@@ -99,6 +99,12 @@ namespace RemoteAccessUtility
             db.Upserts("account", upserts);
         }
 
+        public static void UpsertAccount(Account account)
+        {
+            db.ToDictionary(account, out var upsert);
+            db.Upsert("account", upsert);
+        }
+
         public static void UpsertEnvironment(Environment environment)
         {
             db.ToDictionary(environment, out var upsert);

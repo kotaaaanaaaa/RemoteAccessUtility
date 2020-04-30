@@ -106,9 +106,11 @@ namespace RemoteAccessUtility
 
         private async Task EditAccounts()
         {
-            var dialogView = new AccountEditDialog(Accounts);
-            var result = await DialogHost.Show(dialogView, "DialogHost");
-            DbAccessor.UpdatetAccounts(Accounts.ToList());
+            var vm = new AccountEditDialogViewModel(Accounts);
+            vm.AccountsSelectedIndex = 0;
+            var dialog = new AccountEditDialog();
+            dialog.DataContext = vm;
+            var result = await DialogHost.Show(dialog, "DialogHost");
         }
         public DelegateCommand EditAccountsCommand { get; set; }
 
@@ -131,7 +133,6 @@ namespace RemoteAccessUtility
     {
         public MainWindowViewModelDesigner()
         {
-
             var account = new Account();
             Accounts = new ObservableCollection<Account>
             {
