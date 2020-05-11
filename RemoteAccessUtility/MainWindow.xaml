@@ -25,8 +25,8 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <materialDesign:DrawerHost>
-        <materialDesign:DialogHost Identifier="DialogHost">
+    <materialDesign:DialogHost Identifier="DialogHost">
+        <materialDesign:DrawerHost>
             <Grid>
                 <DataGrid Name="EnvironmentList"
                           ItemsSource="{Binding Environments}"
@@ -132,28 +132,28 @@
                     <materialDesign:PackIcon Kind="Plus" />
                 </Button>
             </Grid>
-        </materialDesign:DialogHost>
-        <materialDesign:DrawerHost.TopDrawerContent>
-            <StackPanel HorizontalAlignment="Center"
-                        Orientation="Horizontal"
-                        Margin="16">
-                <Button Command="{Binding EditAccountsCommand}"
-                        Margin="4"
-                        ToolTip="Edit account">
-                    <icon:AccountEdit/>
-                </Button>
-                <Button Command="{Binding SettingCommand}"
-                        Margin="4"
-                        ToolTip="Setting">
-                    <materialDesign:PackIcon Kind="Settings"/>
-                </Button>
-                <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"
-                        Margin="4"
-                        Style="{StaticResource MaterialDesignIconButton}"
-                        ToolTip="Close">
-                    <materialDesign:PackIcon Kind="Close"/>
-                </Button>
-            </StackPanel>
-        </materialDesign:DrawerHost.TopDrawerContent>
-    </materialDesign:DrawerHost>
+            <materialDesign:DrawerHost.TopDrawerContent>
+                <StackPanel HorizontalAlignment="Center"
+                            Orientation="Horizontal"
+                            Margin="16">
+                    <Button Command="{Binding EditAccountsCommand}"
+                            Margin="4"
+                            ToolTip="Edit account">
+                        <icon:AccountEdit/>
+                    </Button>
+                    <Button Command="{Binding SettingCommand}"
+                            Margin="4"
+                            ToolTip="Setting">
+                        <materialDesign:PackIcon Kind="Settings"/>
+                    </Button>
+                    <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"
+                            Margin="4"
+                            Style="{StaticResource MaterialDesignIconButton}"
+                            ToolTip="Close">
+                        <materialDesign:PackIcon Kind="Close"/>
+                    </Button>
+                </StackPanel>
+            </materialDesign:DrawerHost.TopDrawerContent>
+        </materialDesign:DrawerHost>
+    </materialDesign:DialogHost>
 </Window>
