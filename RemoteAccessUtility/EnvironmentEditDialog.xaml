@@ -6,7 +6,7 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib" 
              xmlns:local="clr-namespace:RemoteAccessUtility"
              xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:bh="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d">
     <UserControl.Resources>
         <ObjectDataProvider x:Key="OperatingSystemType"
@@ -35,22 +35,22 @@
                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                  Text="{Binding HostName}"
                  Margin="0 0 5 0">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="TextChanged">
-                    <i:InvokeCommandAction Command="{Binding HostNameChangedCommand}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
+            <bh:Interaction.Triggers>
+                <bh:EventTrigger EventName="TextChanged">
+                    <bh:InvokeCommandAction Command="{Binding HostNameChangedCommand}"/>
+                </bh:EventTrigger>
+            </bh:Interaction.Triggers>
         </TextBox>
         <TextBox Grid.Row="1" Grid.Column="0" VerticalAlignment="Bottom"
                  material:HintAssist.Hint="IP Address / Host Name"
                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                  Text="{Binding ConnectionAddress}"
                  Margin="0 0 5 0">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="TextChanged">
-                    <i:InvokeCommandAction Command="{Binding ConnectionAddressChangedCommand}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
+            <bh:Interaction.Triggers>
+                <bh:EventTrigger EventName="TextChanged">
+                    <bh:InvokeCommandAction Command="{Binding ConnectionAddressChangedCommand}"/>
+                </bh:EventTrigger>
+            </bh:Interaction.Triggers>
         </TextBox>
         <ComboBox Grid.Row="2" Grid.Column="0" VerticalAlignment="Bottom"
                   HorizontalAlignment="Left" 
@@ -67,11 +67,11 @@
                   SelectedIndex="{Binding AccountsSelectedIndex}"
                   DisplayMemberPath="Name"
                   Margin="0 0 5 0">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="SelectionChanged">
-                    <i:InvokeCommandAction Command="{Binding AccountChangedCommand}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
+            <bh:Interaction.Triggers>
+                <bh:EventTrigger EventName="SelectionChanged">
+                    <bh:InvokeCommandAction Command="{Binding AccountChangedCommand}"/>
+                </bh:EventTrigger>
+            </bh:Interaction.Triggers>
         </ComboBox>
         <StackPanel Grid.Row="4" Grid.Column="1"
                     Orientation="Horizontal"

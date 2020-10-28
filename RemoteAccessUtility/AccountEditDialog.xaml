@@ -5,7 +5,7 @@
              xmlns:local="clr-namespace:RemoteAccessUtility"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:bh="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance local:AccountEditDialogViewModelDesigner, IsDesignTimeCreatable=True}">
     <Grid Margin="16"
@@ -64,11 +64,11 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SelectionChanged">
-                        <i:InvokeCommandAction Command="{Binding AccountsChangedCommand}"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
+                <bh:Interaction.Triggers>
+                    <bh:EventTrigger EventName="SelectionChanged">
+                        <bh:InvokeCommandAction Command="{Binding AccountsChangedCommand}"/>
+                    </bh:EventTrigger>
+                </bh:Interaction.Triggers>
             </DataGrid>
         </materialDesign:Card>
         <Button Grid.Row="0" Grid.Column="0"
